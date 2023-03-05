@@ -106,4 +106,80 @@ public class BlogRepository : IBlogRepository
 		return await tagQuery
 			.ToPagedListAsync(pagingParams, cancellationToken);
 	}
+	//Tìm một thẻ (Tag) theo tên định danh (slug)
+	public async Task<Tag> GetOneTag(string slug, 
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Set<Tag>()
+			.Where(x => x.UrlSlug == slug)
+			.FirstOrDefaultAsync(cancellationToken);
+	}
+	//Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
+	//quả trả về kiểu IList<TagItem>
+	public async Task<IList<TagItem>> GetAllTag(CancellationToken cancellation = default)
+	{
+		IQueryable<Tag> tagItems = _context.Set<Tag>();
+		return await tagItems
+			.OrderBy(x => x.Name)
+			.Select(x => new TagItem()
+			{
+				Id = x.Id,
+				Name = x.Name,
+				Description = x.Description,
+				PostCount = x.Posts.Count(x => x.Published)
+			}).ToListAsync(cancellation);
+	}
+	// Xóa một thẻ theo mã cho trước
+	public class NotFoundException : Exception
+	{
+		public NotFoundException(string entityName, int entityId)
+			: base($"Entity '{entityName}' with ID '{entityId}' was not found.")
+		{
+		}
+	}
+	public async Task DeleteTag(int id, CancellationToken cancellationToken = default)
+	{
+		/*var tag = await _context.Set<Tag>().FindAsync(id);
+		if (tag == null)
+		{
+			throw new NotFoundException(nameof(Tag), id);
+		}
+		_context.Set<Tag>().Remove(tag);
+		await _context.SaveChangesAsync(cancellationToken);*/
+		var tagDelete = _context.Set<Tag>().SingleOrDefault(x => x.Id == id);
+		if (tagDelete != null)
+		{
+			_context.Tags.Remove(tagDelete);
+			_context.SaveChanges();
+			Console.WriteLine("Xoa the thanh cong!");
+		} else
+		{
+			Console.WriteLine("Khong tim thay the can xoa!");
+		}
+
+	}
+	//Tìm một chuyên mục (Category) theo tên định danh (slug)
+	public async Task<Category> GetOneCategory(string slug, 
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Set<Category>()
+			.Where(x => x.UrlSlug == slug)
+			.FirstOrDefaultAsync(cancellationToken);
+	}
+	//Tìm một chuyên mục theo mã số cho trước
+	public async Task<CategoryItem> FindCategoryById(int id, 
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Set<Category>()
+			.Where(x => x.Id == id)
+			.Select(x => new CategoryItem()
+			{
+				Id = x.Id,
+				Name = x.Name,
+				UrlSlug = x.UrlSlug,
+				Description = x.Description,
+				PostCount = x.Posts.Count(x => x.Published)
+			})
+			.FirstOrDefaultAsync(cancellationToken);
+	}
 }

@@ -26,6 +26,18 @@ public interface IBlogRepository
 	//Lấy danh sách chuyên mục và số lượng bài viết thuộc từng chuyên mục
 	Task<IList<CategoryItem>> GetCategoryAsync(bool showOnMenu = false,
 		CancellationToken cancellationToken = default);
-	Task<IPagedList<TagItem>> GetPagedTagsAsync (
+	Task<IPagedList<TagItem>> GetPagedTagsAsync(
 		IPagingParams pagingParams, CancellationToken cancellationToken = default);
+	//Tìm một thẻ (Tag) theo tên định danh (slug)
+	Task<Tag> GetOneTag(string slug, CancellationToken cancellationToken = default);
+	//Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
+	//quả trả về kiểu IList<TagItem>
+	Task<IList<TagItem>> GetAllTag(CancellationToken cancellation = default);
+	// Xóa một thẻ theo mã cho trước
+	Task DeleteTag(int id, CancellationToken cancellationToken = default);
+	//Tìm một chuyên mục (Category) theo tên định danh (slug)
+	Task<Category> GetOneCategory(string slug, CancellationToken cancellationToken = default);
+	//Tìm một chuyên mục theo mã số cho trước
+	Task<CategoryItem> FindCategoryById(int id, CancellationToken cancellationToken = default);
+	//Thêm hoặc cập nhật một chuyên mục/chủ đề
 }
