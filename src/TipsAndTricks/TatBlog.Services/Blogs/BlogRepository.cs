@@ -11,6 +11,7 @@ using TatBlog.Core.Contracts;
 using System.ComponentModel;
 using TatBlog.Data.Mappings;
 using TatBlog.Services.Extensions;
+using System.Net.Http.Headers;
 
 namespace TatBlog.Services.Blogs;
 
@@ -130,13 +131,13 @@ public class BlogRepository : IBlogRepository
 			}).ToListAsync(cancellation);
 	}
 	// Xóa một thẻ theo mã cho trước
-	public class NotFoundException : Exception
+	/*public class NotFoundException : Exception
 	{
 		public NotFoundException(string entityName, int entityId)
 			: base($"Entity '{entityName}' with ID '{entityId}' was not found.")
 		{
 		}
-	}
+	}*/
 	public async Task DeleteTag(int id, CancellationToken cancellationToken = default)
 	{
 		/*var tag = await _context.Set<Tag>().FindAsync(id);
@@ -150,7 +151,7 @@ public class BlogRepository : IBlogRepository
 		if (tagDelete != null)
 		{
 			_context.Tags.Remove(tagDelete);
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 			Console.WriteLine("Xoa the thanh cong!");
 		} else
 		{
@@ -181,5 +182,60 @@ public class BlogRepository : IBlogRepository
 				PostCount = x.Posts.Count(x => x.Published)
 			})
 			.FirstOrDefaultAsync(cancellationToken);
+	}
+	//Thêm hoặc cập nhật một chuyên mục/chủ đề
+	public async Task AddCategory(string name, string urlSlug, string description,
+		CancellationToken cancellation = default)
+	{
+		_context.Category
+			.Add(new Category()
+			{
+				Name = name,
+				UrlSlug = urlSlug,
+				Description = description,
+				ShowOnMenu = true
+			});
+		Console.WriteLine("Them chuyen muc thanh cong!\n");
+		Console.WriteLine("".PadRight(80, '-'));
+		await _context.SaveChangesAsync(cancellation);
+	}
+	//Xóa một chuyên mục theo mã số cho trước
+	public async Task DeleteCategory(int id, CancellationToken cancellation = default)
+	{
+		var categoryDelete = _context.Set<Category>().SingleOrDefault(x => x.Id == id);
+		if (categoryDelete != null)
+		{
+			_context.Category.Remove(categoryDelete);
+			await _context.SaveChangesAsync();
+			Console.WriteLine("Xoa chuyen muc thanh cong!");
+		}
+		else
+		{
+			Console.WriteLine("Khong tim thay chuyen muc can xoa!");
+		}
+	}
+	//Kiểm tra tên định danh (slug) của một chuyên mục đã tồn tại hay chưa
+	public async Task<bool> CheckSlugExist(string slug,
+		CancellationToken cancellationToken = default)
+	{
+		return await _context.Set<Category>()
+			.AnyAsync(x => x.UrlSlug == slug, cancellationToken);
+	}
+	//Lấy và phân trang danh sách chuyên mục, kết quả trả về kiểu
+	//IPagedList<CategoryItem>
+	public async Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams,
+		CancellationToken cancellationToken = default)
+	{
+		var categoryQuery = _context.Set<Category>()
+			.Select(x => new CategoryItem()
+			{
+				Id = x.Id,
+				Name = x.Name,
+				UrlSlug = x.UrlSlug,
+				Description = x.Description,
+				ShowOnMenu = true,
+				PostCount = x.Posts.Count(p => p.Published)
+			});
+		return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
 	}
 }

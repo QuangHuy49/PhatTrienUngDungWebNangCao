@@ -40,4 +40,15 @@ public interface IBlogRepository
 	//Tìm một chuyên mục theo mã số cho trước
 	Task<CategoryItem> FindCategoryById(int id, CancellationToken cancellationToken = default);
 	//Thêm hoặc cập nhật một chuyên mục/chủ đề
+	Task AddCategory(string name, string urlSlug, string description, 
+		CancellationToken cancellation = default);
+	//Xóa một chuyên mục theo mã số cho trước
+	Task DeleteCategory(int id, CancellationToken cancellation = default);
+	//Kiểm tra tên định danh (slug) của một chuyên mục đã tồn tại hay chưa
+	Task<bool> CheckSlugExist(string slug,
+		CancellationToken cancellationToken = default);
+	//Lấy và phân trang danh sách chuyên mục, kết quả trả về kiểu
+	//IPagedList<CategoryItem>
+	Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams,
+		CancellationToken cancellationToken = default);
 }
