@@ -51,4 +51,10 @@ public interface IBlogRepository
 	//IPagedList<CategoryItem>
 	Task<IPagedList<CategoryItem>> GetPagedCategoriesAsync(IPagingParams pagingParams,
 		CancellationToken cancellationToken = default);
+	//Đếm số lượng bài viết trong N tháng gần nhất. N là tham số đầu vào. Kết
+	//quả là một danh sách các đối tượng chứa các thông tin sau: Năm, Tháng, Số
+	//bài viết
+
+	//Chuyển đổi trạng thái Published của bài viết
+	Task ChangeStatusPost(int id, CancellationToken cancellation = default);
 }

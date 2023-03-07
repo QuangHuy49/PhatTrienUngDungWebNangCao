@@ -238,4 +238,48 @@ public class BlogRepository : IBlogRepository
 			});
 		return await categoryQuery.ToPagedListAsync(pagingParams, cancellationToken);
 	}
+	//Đếm số lượng bài viết trong N tháng gần nhất. N là tham số đầu vào. Kết
+	//quả là một danh sách các đối tượng chứa các thông tin sau: Năm, Tháng, Số
+	//bài viết
+
+	//Chuyển đổi trạng thái Published của bài viết
+	public async Task ChangeStatusPost(int id, CancellationToken cancellation = default)
+	{
+		var post = _context.Set<Post>().Include(x => x.Category)
+			.Include(x => x.Author).FirstOrDefault(x => x.Id == id);
+		if(post != null)
+		{
+			Console.WriteLine("ID           : {0}", post.Id);
+			Console.WriteLine("Title        : {0}", post.Title);
+			Console.WriteLine("Date         : {0:MM/dd/yyyy}", post.PostedDate);
+			Console.WriteLine("Author       : {0}", post.Author.FullName);
+			Console.WriteLine("Category     : {0}", post.Category.Name);
+			Console.WriteLine("Published    : {0}", post.Published);
+			Console.WriteLine("".PadRight(80, '-'));
+
+			Console.WriteLine("Ban co muon thay doi trang thai cua bai viet (Yes/No)?");
+			var answer = Console.ReadLine().Trim();
+			if (string.Equals(answer, "yes", StringComparison.OrdinalIgnoreCase))
+			{
+				post.Published = !post.Published;
+				await _context.SaveChangesAsync();
+				Console.WriteLine("Thong tin bai viet sau khi thay doi: ");
+				Console.WriteLine("ID           : {0}", post.Id);
+				Console.WriteLine("Title        : {0}", post.Title);
+				Console.WriteLine("Date         : {0:MM/dd/yyyy}", post.PostedDate);
+				Console.WriteLine("Author       : {0}", post.Author.FullName);
+				Console.WriteLine("Category     : {0}", post.Category.Name);
+				Console.WriteLine("Published    : {0}", post.Published);
+				Console.WriteLine("".PadRight(80, '-'));
+			}
+			else
+			{
+				Console.WriteLine("Bai viet chua duoc thay doi!");
+			}
+		} else
+		{
+			Console.WriteLine("Khong tim thay bai viet!");
+		}
+		
+	}
 }

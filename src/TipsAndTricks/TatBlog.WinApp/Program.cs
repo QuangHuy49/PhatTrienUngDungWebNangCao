@@ -200,7 +200,7 @@ else
 //Lấy và phân trang danh sách chuyên mục, kết quả trả về kiểu
 //IPagedList<CategoryItem>
 //Tạo đối tượng chứa tham số phân trang
-var pagingParams = new PagingParams
+/*var pagingParams = new PagingParams
 {
 	PageNumber = 1,
 	PageSize = 10,
@@ -212,4 +212,9 @@ Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", "ID", "Name", "UrlSl
 foreach (var item in catrgoryItem)
 {
 	Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", item.Id, item.Name, item.UrlSlug, item.Description, item.PostCount);
-}
+}*/
+
+//Chuyển đổi trạng thái Published của bài viết
+Console.Write("Nhap ma so bai viet can thay doi trang thai: \n");
+int id = Convert.ToInt32(Console.ReadLine().Trim());
+await blogRepo.ChangeStatusPost(id);
