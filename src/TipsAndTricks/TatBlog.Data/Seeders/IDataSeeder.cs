@@ -7,7 +7,7 @@ using TatBlog.Data.Seeders;
 
 namespace TatBlog.Data.Seeders
 {
-	internal interface IDataSeeder
+	public interface IDataSeeder
 	{
 		void Initialize();
 	}

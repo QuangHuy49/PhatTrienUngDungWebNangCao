@@ -44,7 +44,7 @@ public class DataSeeder : IDataSeeder
 				JoinedDate = new DateTime(2020, 4, 19)
 			}
 		};
-		_dbContext.Author.AddRange(authors);
+		_dbContext.Authors.AddRange(authors);
 		_dbContext.SaveChanges();
 		return authors;
 	}
