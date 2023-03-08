@@ -55,6 +55,19 @@ public interface IBlogRepository
     //quả là một danh sách các đối tượng chứa các thông tin sau: Năm, Tháng, Số
     //bài viết
 
+    //Tìm một bài viết theo mã số
+    Task<Post> GetPostByIdAsync(int id, bool includeDetails = false,
+        CancellationToken cancellation = default);
+    //Thêm hay cập nhật một bài viết
+    /*Task<Post> CreatOrUpdatePostAsync(Post post, 
+        IEnumerable<string> tags,
+        CancellationToken cancellationToken = default);*/
     //Chuyển đổi trạng thái Published của bài viết
     Task ChangeStatusPost(int id, CancellationToken cancellation = default);
+    //Lấy ngẫu nhiên N bài viết. N là tham số đầu vào
+
+
+    //Tìm và phân trang các bài viết thỏa mãn điều kiện tìm kiếm được cho trong
+    //đối tượng PostQuery(kết quả trả về kiểu IPagedList<Post>)
+    //Task<IList<Post>> FindPostByPostQueryAsync(PostQuery postQuery, CancellationToken cancellationToken = default);
 }

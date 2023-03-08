@@ -19,7 +19,7 @@ public class BlogDbContext : DbContext
 		DbContextOptionsBuilder optionsBuilder)
 	{
 		optionsBuilder.UseSqlServer(@"Server=QUANGHUY\MSSQLSERVER02;Database=TatBLog;
-			Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False") ;
+			Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False");
 	}*/
 	public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
 	{

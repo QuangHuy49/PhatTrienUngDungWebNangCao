@@ -243,6 +243,22 @@ public class BlogRepository : IBlogRepository
     //quả là một danh sách các đối tượng chứa các thông tin sau: Năm, Tháng, Số
     //bài viết
 
+    //Tìm một bài viết theo mã số
+    public async Task<Post> GetPostByIdAsync(int id, bool includeDetails = false,
+        CancellationToken cancellation = default)
+    {
+        /*if(!includeDetails)
+        {
+            return await _context.Set<Post>().FindAsync(id);
+        }*/
+        return await _context.Set<Post>()
+            .Include(x => x.Category)
+            .Include(x => x.Author)
+            .Include(x => x.Tags)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellation);
+    }
+    //Thêm hay cập nhật một bài viết
+    
     //Chuyển đổi trạng thái Published của bài viết
     public async Task ChangeStatusPost(int id, CancellationToken cancellation = default)
     {
@@ -284,4 +300,20 @@ public class BlogRepository : IBlogRepository
         }
 
     }
+
+    //Tìm và phân trang các bài viết thỏa mãn điều kiện tìm kiếm được cho trong
+    //đối tượng PostQuery(kết quả trả về kiểu IPagedList<Post>)
+   /* public async Task<IList<Post>> FindPostByPostQueryAsync(PostQuery postQuery, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Post>()
+            .Include(x => x.Author)
+            .Include(x => x.Category)
+            .Include(x => x.Tags)
+            .Where(p => p.AuthorID == postQuery.AuthorId
+            || p.CategoryId == postQuery.CategoryId
+            || p.Category.UrlSlug.Equals(postQuery.CategorySlug)
+            || p.PostedDate.Month == postQuery.Month
+            || p.PostedDate.Year == postQuery.Year
+            || p.
+    }*/
 }

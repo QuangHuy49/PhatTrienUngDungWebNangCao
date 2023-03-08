@@ -6,9 +6,9 @@ using TatBlog.Data.Seeders;
 using TatBlog.Services.Blogs;
 using TatBlog.WinApp;
 
-//var context = new BlogDbContext();
-//var seeder = new DataSeeder(context);
-//seeder.Initialize();
+var context = new BlogDbContext();
+var seeder = new DataSeeder(context);
+seeder.Initialize();
 
 /*var authors = context.Author.ToList();
 
@@ -42,7 +42,7 @@ foreach (var post in posts)
 	Console.WriteLine("".PadRight(80, '-'));
 }*/
 
-//IBlogRepository blogRepo = new BlogRepository(context);
+IBlogRepository blogRepo = new BlogRepository(context);
 /*var posts = await blogRepo.GetPopularArticlesAsync(3);
 foreach (var post in posts)
 {
@@ -218,3 +218,11 @@ foreach (var item in catrgoryItem)
 /*Console.Write("Nhap ma so bai viet can thay doi trang thai: \n");
 int id = Convert.ToInt32(Console.ReadLine().Trim());
 await blogRepo.ChangeStatusPost(id);*/
+
+//Tìm một bài viết theo mã số
+/*Console.Write("Nhap ma so bai viet can tim: ");
+int id = Convert.ToInt32(Console.ReadLine());
+var findById = await blogRepo.GetPostByIdAsync(id);
+Console.WriteLine("{0,-20} {1,-30} {2,10}", "Category", "Author", "Tag");
+Console.WriteLine("{0,-20} {1,-30} {2,10}", findById.Category.Name, findById.Author.FullName, findById.Tags.Count);
+*/
