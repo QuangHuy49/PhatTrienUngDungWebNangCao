@@ -48,8 +48,10 @@ var app = builder.Build();
     //Định nghĩa route template, route constraint cho các
     //endpoints kết hợp với các action trong các controller.
     app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Blog}/{action=Index}/{id?}");
+        name: "posts-by-category",
+        pattern: "blog/category/{slug}",
+        defaults: new { controller = "Blog", action = "Category" });
+    
 }
 
 //Thêm dữ liệu mẫu vào CSDL

@@ -66,8 +66,19 @@ public interface IBlogRepository
     Task ChangeStatusPost(int id, CancellationToken cancellation = default);
     //Lấy ngẫu nhiên N bài viết. N là tham số đầu vào
 
+    //Đếm số lượng bài viết thỏa mãn điều kiện tìm kiếm được cho trong đối
+    //tượng PostQuery
+    Task<int> CountPostsOfPostQueryAsync(PostQuery query, IPagingParams pagingParams,
+        CancellationToken cancellationToken = default);
 
     //Tìm và phân trang các bài viết thỏa mãn điều kiện tìm kiếm được cho trong
     //đối tượng PostQuery(kết quả trả về kiểu IPagedList<Post>)
-    //Task<IList<Post>> FindPostByPostQueryAsync(PostQuery postQuery, CancellationToken cancellationToken = default);
+    Task<IList<Post>> FindPostByPostQueryAsync(PostQuery postQuery, IPagingParams pagingParams,
+        CancellationToken cancellationToken = default);
+
+    Task<IPagedList<Post>> GetPagedPostAsync(
+        PostQuery condition,
+        int pageNumber = 1,
+        int pageSize = 10,
+        CancellationToken cancellationToken = default);
 }

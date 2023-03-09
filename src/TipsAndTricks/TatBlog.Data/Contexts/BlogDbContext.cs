@@ -15,12 +15,18 @@ public class BlogDbContext : DbContext
 	public DbSet<Category> Categories { get; set; }
 	public DbSet<Tag> Tags { get; set; }
 	public DbSet<Post> Posts { get; set; }
-	/*protected override void OnConfiguring(
+	protected override void OnConfiguring(
 		DbContextOptionsBuilder optionsBuilder)
 	{
 		optionsBuilder.UseSqlServer(@"Server=QUANGHUY\MSSQLSERVER02;Database=TatBLog;
 			Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False");
-	}*/
+	}
+
+	public BlogDbContext()
+	{
+
+	}
+
 	public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options)
 	{
 

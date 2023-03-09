@@ -1,14 +1,10 @@
-﻿using Azure;
-using System.Runtime.InteropServices;
-using TatBlog.Core.Entities;
-using TatBlog.Data.Contexts;
-using TatBlog.Data.Seeders;
+﻿using TatBlog.Data.Contexts;
 using TatBlog.Services.Blogs;
-using TatBlog.WinApp;
 
 var context = new BlogDbContext();
-var seeder = new DataSeeder(context);
-seeder.Initialize();
+IBlogRepository blogRepo = new BlogRepository(context);
+//var seeder = new DataSeeder(context);
+//seeder.Initialize();
 
 /*var authors = context.Author.ToList();
 
@@ -40,10 +36,10 @@ foreach (var post in posts)
 	Console.WriteLine("Author     : {0}", post.Author);
 	Console.WriteLine("Category   : {0}", post.Category);
 	Console.WriteLine("".PadRight(80, '-'));
-}*/
+}*//*
 
 IBlogRepository blogRepo = new BlogRepository(context);
-/*var posts = await blogRepo.GetPopularArticlesAsync(3);
+*//*var posts = await blogRepo.GetPopularArticlesAsync(3);
 foreach (var post in posts)
 {
 	Console.WriteLine("ID         : {0}", post.Id);
@@ -61,31 +57,31 @@ foreach (var item in categories)
 {
 	Console.WriteLine("{0,-5}{1,-50}{2,10}",
 		item.Id, item.Name, item.PostCount);
-}*/
+}*//*
 
 //Lấy danh sách từ khóa
-/*var tagsList = await blogRepo.GetPagedTagsAsync(pagingParams);
+*//*var tagsList = await blogRepo.GetPagedTagsAsync(pagingParams);
 Console.WriteLine("{0,-5} {1,-50} {2,10}", "ID", "Name", "Count");
 foreach (var item in tagsList)
 {
 	Console.WriteLine("{0,-5} {1,-50} {2,10}", item.Id, item.Name, item.PostCount);
-}*/
+}*//*
 //Tìm một thẻ (Tag) theo tên định danh (slug)
-/*string slug = "Google";
+*//*string slug = "Google";
 var getTag = await blogRepo.GetOneTag(slug);
 Console.WriteLine("{0,-5} {1,-50} {2,10}", "ID", "Name", "Count");
-Console.WriteLine("{0,-5} {1,-50} {2,10}", getTag.Id, getTag.Name, getTag.UrlSlug);*/
+Console.WriteLine("{0,-5} {1,-50} {2,10}", getTag.Id, getTag.Name, getTag.UrlSlug);*//*
 //Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
 //quả trả về kiểu IList<TagItem>
-/*var tagItems = await blogRepo.GetAllTag();
+*//*var tagItems = await blogRepo.GetAllTag();
 Console.WriteLine("{0,-5}{1,-50}{2,10}", "ID", "Name", "Count");
 foreach (var item in tagItems)
 {
 	Console.WriteLine("{0,-5}{1,-50}{2,10}",
 		item.Id, item.Name, item.PostCount);
-}*/
+}*//*
 // Xóa một thẻ theo mã cho trước
-/*Console.WriteLine("Nhap ma the can xoa: ");
+*//*Console.WriteLine("Nhap ma the can xoa: ");
 int nhap = Convert.ToInt32(Console.ReadLine());
 var tagDelete = blogRepo.DeleteTag(nhap);
 var tags = context.Tags
@@ -114,20 +110,20 @@ if (tags.Count > 0)
 else
 {
 	Console.WriteLine("Khong tim thay the can tim!");
-}*/
+}*//*
 //Tìm một chuyên mục (Category) theo tên định danh (slug)
-/*string slugCategory = "Architecture";
+*//*string slugCategory = "Architecture";
 var getCategory = await blogRepo.GetOneCategory(slugCategory);
 Console.WriteLine("{0,-5} {1,-50} {2,10}", "ID", "Name", "Description");
-Console.WriteLine("{0,-5} {1,-50} {2,10}", getCategory.Id, getCategory.Name, getCategory.Description);*/
+Console.WriteLine("{0,-5} {1,-50} {2,10}", getCategory.Id, getCategory.Name, getCategory.Description);*//*
 //Tìm một chuyên mục theo mã số cho trước
-/*Console.WriteLine("Nhap chuyen muc can tim: ");
+*//*Console.WriteLine("Nhap chuyen muc can tim: ");
 int nhapCategory = Convert.ToInt32(Console.ReadLine());
 var findById = await blogRepo.FindCategoryById(nhapCategory);
 Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", "ID", "Name", "UrlSlug", "Description", "PostCount");
-Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", findById.Id, findById.Name, findById.UrlSlug, findById.Description, findById.PostCount);*/
+Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", findById.Id, findById.Name, findById.UrlSlug, findById.Description, findById.PostCount);*//*
 //Thêm hoặc cập nhật một chuyên mục/chủ đề
-/*Console.WriteLine("Nhap thong tin chuyen muc can them: \n");
+*//*Console.WriteLine("Nhap thong tin chuyen muc can them: \n");
 Console.Write("Name: ");
 string cateName = Console.ReadLine().Trim();
 Console.Write("UrlSlug: ");
@@ -154,9 +150,9 @@ foreach (var item in category)
 	Console.WriteLine("Desciption  : {0}", item.Description);
 	Console.WriteLine("PostCount   : {0}", item.PostCount);
 	Console.WriteLine("".PadRight(80, '-'));
-}*/
+}*//*
 //Xóa một chuyên mục theo mã số cho trước
-/*Console.WriteLine("Nhap ma chuyen muc can xoa: ");
+*//*Console.WriteLine("Nhap ma chuyen muc can xoa: ");
 int nhap = Convert.ToInt32(Console.ReadLine());
 blogRepo.DeleteCategory(nhap);
 var category = context.Category
@@ -185,9 +181,9 @@ if (category.Count > 0)
 else
 {
 	Console.WriteLine("Khong tim thay the can tim!");
-}*/
+}*//*
 //Kiểm tra tên định danh (slug) của một chuyên mục đã tồn tại hay chưa
-/*Console.WriteLine("Nhap ten dinh danh chuyen muc can kiem tra: ");
+*//*Console.WriteLine("Nhap ten dinh danh chuyen muc can kiem tra: ");
 string slug = Console.ReadLine();
 if (await blogRepo.CheckSlugExist(slug))
 {
@@ -196,11 +192,11 @@ if (await blogRepo.CheckSlugExist(slug))
 else
 {
 	Console.WriteLine("Ten dinh danh chuyen muc chua ton tai.");
-}*/
+}*//*
 //Lấy và phân trang danh sách chuyên mục, kết quả trả về kiểu
 //IPagedList<CategoryItem>
 //Tạo đối tượng chứa tham số phân trang
-/*var pagingParams = new PagingParams
+*//*var pagingParams = new PagingParams
 {
 	PageNumber = 1,
 	PageSize = 10,
@@ -212,17 +208,29 @@ Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", "ID", "Name", "UrlSl
 foreach (var item in catrgoryItem)
 {
 	Console.WriteLine("{0,-5} {1,-20} {2,-30} {3,-20} {4,-30}", item.Id, item.Name, item.UrlSlug, item.Description, item.PostCount);
-}*/
+}*//*
 
 //Chuyển đổi trạng thái Published của bài viết
-/*Console.Write("Nhap ma so bai viet can thay doi trang thai: \n");
+*//*Console.Write("Nhap ma so bai viet can thay doi trang thai: \n");
 int id = Convert.ToInt32(Console.ReadLine().Trim());
-await blogRepo.ChangeStatusPost(id);*/
+await blogRepo.ChangeStatusPost(id);*//*
 
 //Tìm một bài viết theo mã số
-/*Console.Write("Nhap ma so bai viet can tim: ");
+*/
+Console.Write("Nhap ma so bai viet can tim: ");
 int id = Convert.ToInt32(Console.ReadLine());
 var findById = await blogRepo.GetPostByIdAsync(id);
+
+
+string str_tagList = "";
+foreach (var item in findById.Tags)
+{
+    str_tagList = str_tagList + item.Name + ", ";
+}
+
+str_tagList = str_tagList.Substring(0, str_tagList.Length - 2);
+
 Console.WriteLine("{0,-20} {1,-30} {2,10}", "Category", "Author", "Tag");
-Console.WriteLine("{0,-20} {1,-30} {2,10}", findById.Category.Name, findById.Author.FullName, findById.Tags.Count);
-*/
+Console.WriteLine("{0,-20} {1,-30} {2,10}", findById.Category.Name, findById.Author.FullName, str_tagList);
+
+
