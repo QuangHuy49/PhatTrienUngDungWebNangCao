@@ -44,7 +44,7 @@ public class DataSeeder : IDataSeeder
 				JoinedDate = new DateTime(2020, 4, 19)
 			}
 		};
-		_dbContext.Author.AddRange(authors);
+		_dbContext.Authors.AddRange(authors);
 		_dbContext.SaveChanges();
 		return authors;
 	}
@@ -54,8 +54,9 @@ public class DataSeeder : IDataSeeder
 			new() {Name = ".NET Core", Description = ".NET Core", UrlSlug = ".NET core", ShowOnMenu = true},
 			new() {Name = "Architecture", Description = "Architecture", UrlSlug = "Architecture", ShowOnMenu = true},
 			new() {Name = "Messaging", Description = "Messaging", UrlSlug = "Messaging", ShowOnMenu = true},
-			new() {Name = "Design Patterns", Description = "Design Patterns", UrlSlug = "Design Patterns", ShowOnMenu = true}
-		};
+			new() {Name = "Design Patterns", Description = "Design Patterns", UrlSlug = "Design Patterns", ShowOnMenu = true},
+            new() {Name = "Blazor", Description = "Blazor", UrlSlug = "Blazor", ShowOnMenu = true}
+        };
 		_dbContext.AddRange(categories);
 		_dbContext.SaveChanges();
 		return categories;
@@ -69,7 +70,9 @@ public class DataSeeder : IDataSeeder
 			new() {Name = "Razor Page", Description = "Razor Page", UrlSlug = "Razor Page"},
 			new() {Name = "Blazor", Description = "Blazor", UrlSlug = "Blazor"},
 			new() {Name = "Deep Learning", Description = "Deep Learning", UrlSlug = "Deep Learning"},
-			new() {Name = "Neural Network", Description = "Neural Network", UrlSlug = "Neural Network"}
+            new() {Name = "Design Pattern", Description = "Design Pattern", UrlSlug = "Design Pattern"},
+			new() {Name = "Architecture", Description = "Architecture", UrlSlug = "Architecture"},
+            new() {Name = "Neural Network", Description = "Neural Network", UrlSlug = "Neural Network"}
 		};
 		_dbContext.AddRange(tags);
 		_dbContext.SaveChanges();
@@ -99,8 +102,68 @@ public class DataSeeder : IDataSeeder
 				{
 					tags[0]
 				}
-			}
-		};
+			},
+            new()
+            {
+                Title = "Introduction to Design Patterns",
+                ShortDescription = "Design patterns are a fundamental part of software development.",
+                Description = "Design patterns are a fundamental part of software development, " +
+				"as they provide typical solutions to commonly recurring problems in software design. " +
+				"Rather than providing specific pieces of software, design patterns are merely concepts that can be used to handle recurring themes in an optimized way.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "design-pattern",
+                Published = true,
+                PostedDate = new DateTime(2023, 3, 9, 10, 20, 0),
+                ModifiedDate = null,
+                ViewCount = 10,
+                Author = authors[1],
+                Category = category[3],
+                Tags = new List<Tag>()
+                {
+                    tags[0], tags[5]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Architecture",
+                ShortDescription = "Architecture is the art and technique of designing and building.",
+                Description = "Architecture is the art and technique of designing and building, " +
+				"as distinguished from the skills associated with construction. It is both the process and the product of " +
+				"sketching, conceiving, planning, designing, and constructing buildings or other structures.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Architecture",
+                Published = true,
+                PostedDate = new DateTime(2023, 3, 10, 10, 20, 0),
+                ModifiedDate = null,
+                ViewCount = 10,
+                Author = authors[1],
+                Category = category[1],
+                Tags = new List<Tag>()
+                {
+                    tags[0], tags[6]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Blazor",
+                ShortDescription = "Build beautiful, web apps with Blazor.",
+                Description = "Blazor is a hot topic amongst the .NET Technical Community, " +
+				"but what is it and why should I be interested in it? Let's learn what Blazor " +
+				"is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Blazor",
+                Published = true,
+                PostedDate = new DateTime(2023, 3, 20, 10, 20, 0),
+                ModifiedDate = null,
+                ViewCount = 10,
+                Author = authors[1],
+                Category = category[4],
+                Tags = new List<Tag>()
+                {
+                    tags[0], tags[3]
+                }
+            }
+        };
 		_dbContext.AddRange(posts); 
 		_dbContext.SaveChanges();
 		return posts;
