@@ -7,14 +7,18 @@ namespace TatBlog.WebApp.Controllers
     public class BlogController : Controller
     {
         public async Task<IActionResult> Index(
+            [FromQuery(Name = "k")] string keyword = null,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 10)
+            [FromQuery(Name = "ps")] int pageSize = 2)
         {
             //Tạo đối tướng chứa các điều kiện truy vấn
             var postQuery = new PostQuery()
             {
                 //Chỉ lấy những bài viết có trạng thái Published
-                PublishedOnly = true
+                PublishedOnly = true,
+
+                //Tìm bài viết theo từ khóa
+                KeyWord = keyword
             };
 
             //Truy vấn các bài viết theo điều kiện đã tạo
