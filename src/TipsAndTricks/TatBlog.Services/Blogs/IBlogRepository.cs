@@ -81,4 +81,11 @@ public interface IBlogRepository
         int pageNumber = 1,
         int pageSize = 10,
         CancellationToken cancellationToken = default);
+
+    //Lấy danh sách bài viết thuộc chủ đề có slug tương ứng
+    Task<IPagedList<Post>> GetPostsByCategorySlugAsync(string categorySlug,
+        int pageNumber, int pageSize);
+
+    //Lấy thông tin chuyên mục
+    Task<Category> GetCategoryBySlugAsync(string categorySlug);
 }

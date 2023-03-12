@@ -111,7 +111,7 @@ public class DataSeeder : IDataSeeder
 				"as they provide typical solutions to commonly recurring problems in software design. " +
 				"Rather than providing specific pieces of software, design patterns are merely concepts that can be used to handle recurring themes in an optimized way.",
                 Meta = "David and friends has a great repository filled...",
-                UrlSlug = "design-pattern",
+                UrlSlug = "blog-introduction-to-design-pattern",
                 Published = true,
                 PostedDate = new DateTime(2023, 3, 9, 10, 20, 0),
                 ModifiedDate = null,
@@ -131,7 +131,7 @@ public class DataSeeder : IDataSeeder
 				"as distinguished from the skills associated with construction. It is both the process and the product of " +
 				"sketching, conceiving, planning, designing, and constructing buildings or other structures.",
                 Meta = "David and friends has a great repository filled...",
-                UrlSlug = "Architecture",
+                UrlSlug = "blog-introduction-to-architecture",
                 Published = true,
                 PostedDate = new DateTime(2023, 3, 10, 10, 20, 0),
                 ModifiedDate = null,
@@ -151,7 +151,7 @@ public class DataSeeder : IDataSeeder
 				"but what is it and why should I be interested in it? Let's learn what Blazor " +
 				"is and how you can use it to make your web applications.",
                 Meta = "David and friends has a great repository filled...",
-                UrlSlug = "Blazor",
+                UrlSlug = "blog-introduction-to-blazor",
                 Published = true,
                 PostedDate = new DateTime(2023, 3, 20, 10, 20, 0),
                 ModifiedDate = null,

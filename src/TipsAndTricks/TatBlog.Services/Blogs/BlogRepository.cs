@@ -408,4 +408,20 @@ public class BlogRepository : IBlogRepository
             nameof(Post.PostedDate), "DESC",
             cancellationToken);
     }
+
+    //Lấy danh sách bài viết thuộc chủ đề có slug tương ứng
+    public async Task<IPagedList<Post>> GetPostsByCategorySlugAsync(string categorySlug,
+        int pageNumber, int pageSize)
+    {
+        var postsQuery = _context.Posts
+            .Where(p => p.Published && p.Category.UrlSlug == categorySlug)
+            .OrderByDescending(p => p.Published);
+        return await postsQuery.ToPagedListAsync(pageNumber, pageSize);
+    }
+
+    //Lấy thông tin chuyên mục
+    public async Task<Category> GetCategoryBySlugAsync(string categorySlug)
+    {
+        return await _context.Categories.FirstOrDefaultAsync(c => c.UrlSlug == categorySlug);
+    }
 }
