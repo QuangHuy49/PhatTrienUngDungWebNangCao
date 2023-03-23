@@ -42,8 +42,29 @@ public class DataSeeder : IDataSeeder
 				UrlSlug = "jessica-wonder",
 				Email = "jessica665@motip.com",
 				JoinedDate = new DateTime(2020, 4, 19)
-			}
-		};
+			},
+            new()
+            {
+                FullName="Thomas",
+                UrlSlug = "thomas",
+                Email = "thomas@motip.com",
+                JoinedDate = new DateTime(2019, 3, 2)
+            },
+            new()
+            {
+                FullName="Marry",
+                UrlSlug = "marry",
+                Email = "marry@motip.com",
+                JoinedDate = new DateTime(2018, 10, 16)
+            },
+            new()
+            {
+                FullName="Linda",
+                UrlSlug = "linda",
+                Email = "linda@motip.com",
+                JoinedDate = new DateTime(1999, 10, 10)
+            }
+        };
 		_dbContext.Authors.AddRange(authors);
 		_dbContext.SaveChanges();
 		return authors;
@@ -55,7 +76,8 @@ public class DataSeeder : IDataSeeder
 			new() {Name = "Architecture", Description = "Architecture", UrlSlug = "Architecture", ShowOnMenu = true},
 			new() {Name = "Messaging", Description = "Messaging", UrlSlug = "Messaging", ShowOnMenu = true},
 			new() {Name = "Design Patterns", Description = "Design Patterns", UrlSlug = "Design Patterns", ShowOnMenu = true},
-            new() {Name = "Blazor", Description = "Blazor", UrlSlug = "Blazor", ShowOnMenu = true}
+            new() {Name = "Blazor", Description = "Blazor", UrlSlug = "Blazor", ShowOnMenu = true},
+            new() {Name = "Python", Description = "Python", UrlSlug = "Python", ShowOnMenu = true}
         };
 		_dbContext.AddRange(categories);
 		_dbContext.SaveChanges();
@@ -72,8 +94,9 @@ public class DataSeeder : IDataSeeder
 			new() {Name = "Deep Learning", Description = "Deep Learning", UrlSlug = "Deep Learning"},
             new() {Name = "Design Pattern", Description = "Design Pattern", UrlSlug = "Design Pattern"},
 			new() {Name = "Architecture", Description = "Architecture", UrlSlug = "Architecture"},
-            new() {Name = "Neural Network", Description = "Neural Network", UrlSlug = "Neural Network"}
-		};
+            new() {Name = "Neural Network", Description = "Neural Network", UrlSlug = "Neural Network"},
+            new() {Name = "Python", Description = "Python", UrlSlug = "Python"},
+        };
 		_dbContext.AddRange(tags);
 		_dbContext.SaveChanges();
 		return tags;
@@ -161,6 +184,166 @@ public class DataSeeder : IDataSeeder
                 Tags = new List<Tag>()
                 {
                     tags[0], tags[3]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Blazor",
+                ShortDescription = "Build beautiful, web apps with Blazor.",
+                Description = "Blazor is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Blazor " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Blazor",
+                Published = true,
+                PostedDate = new DateTime(2023, 4, 23, 20, 10, 1),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[2],
+                Category = category[4],
+                Tags = new List<Tag>()
+                {
+                    tags[0], tags[3]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 5, 20, 19, 20, 1),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 5, 25, 18, 50, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+            new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 6, 30, 6, 10, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+             new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 6, 20, 7, 10, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+              new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 6, 30, 6, 10, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+               new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 6, 30, 6, 10, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
+                }
+            },
+                new()
+            {
+                Title = "Introduction to Python",
+                ShortDescription = "Build beautiful, web apps with Python.",
+                Description = "Python is a hot topic amongst the .NET Technical Community, " +
+                "but what is it and why should I be interested in it? Let's learn what Python " +
+                "is and how you can use it to make your web applications.",
+                Meta = "David and friends has a great repository filled...",
+                UrlSlug = "Python",
+                Published = true,
+                PostedDate = new DateTime(2023, 6, 30, 6, 10, 10),
+                ModifiedDate = null,
+                ViewCount = 20,
+                Author = authors[3],
+                Category = category[5],
+                Tags = new List<Tag>()
+                {
+                    tags[8]
                 }
             }
         };
