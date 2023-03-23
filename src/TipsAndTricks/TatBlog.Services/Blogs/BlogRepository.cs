@@ -108,7 +108,7 @@ public class BlogRepository : IBlogRepository
             .ToPagedListAsync(pagingParams, cancellationToken);
     }
     //Tìm một thẻ (Tag) theo tên định danh (slug)
-    public async Task<Tag> GetOneTag(string slug,
+    public async Task<Tag> GetTagAsync(string slug,
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Tag>()
@@ -185,7 +185,7 @@ public class BlogRepository : IBlogRepository
             .FirstOrDefaultAsync(cancellationToken);
     }
     //Thêm hoặc cập nhật một chuyên mục/chủ đề
-    public async Task AddCategory(string name, string urlSlug, string description,
+    /*public async Task AddCategory(string name, string urlSlug, string description,
         CancellationToken cancellation = default)
     {
         _context.Categories
@@ -199,7 +199,63 @@ public class BlogRepository : IBlogRepository
         Console.WriteLine("Them chuyen muc thanh cong!\n");
         Console.WriteLine("".PadRight(80, '-'));
         await _context.SaveChangesAsync(cancellation);
+    }*/
+
+    private string GenerateSlug(string text)
+    {
+        var array = text.Trim().ToLower().Split(' ');
+        return string.Join("-", array);
     }
+
+    public async Task<Post> CreateOrUpdatePostAsync(
+        Post post, IEnumerable<string> tags,
+        CancellationToken cancellationToken = default)
+    {
+        if (post.Id > 0)
+        {
+            await _context.Entry(post).Collection(x => x.Tags).LoadAsync(cancellationToken);
+        }
+        else
+        {
+            post.Tags = new List<Tag>();
+        }
+
+        var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => new
+            {
+                Name = x,
+                Slug = GenerateSlug(x)
+            })
+            .GroupBy(x => x.Slug)
+            .ToDictionary(g => g.Key, g => g.First().Name);
+
+
+        foreach (var kv in validTags)
+        {
+            if (post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0)) continue;
+
+            var tag = await GetTagAsync(kv.Key, cancellationToken) ?? new Tag()
+            {
+                Name = kv.Value,
+                Description = kv.Value,
+                UrlSlug = kv.Key
+            };
+
+            post.Tags.Add(tag);
+        }
+
+        post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
+
+        if (post.Id > 0)
+            _context.Update(post);
+        else
+            _context.Add(post);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return post;
+    }
+
     //Xóa một chuyên mục theo mã số cho trước
     public async Task DeleteCategory(int id, CancellationToken cancellation = default)
     {
@@ -320,7 +376,7 @@ public class BlogRepository : IBlogRepository
             .Include(x => x.Author)
             .Include(x => x.Category)
             .Include(x => x.Tags)
-            .Where(p => p.AuthorID == postQuery.AuthorId
+            .Where(p => p.AuthorId == postQuery.AuthorId
             || p.CategoryId == postQuery.CategoryId
             || p.Category.UrlSlug.Equals(postQuery.CategorySlug)
             || p.PostedDate.Month == postQuery.Month
@@ -357,7 +413,7 @@ public class BlogRepository : IBlogRepository
 
 		if (condition.AuthorId > 0)
 		{
-			posts = posts.Where(x => x.AuthorID == condition.AuthorId);
+			posts = posts.Where(x => x.AuthorId == condition.AuthorId);
 		}
 
 		if (!string.IsNullOrWhiteSpace(condition.AuthorSlug))
@@ -408,4 +464,24 @@ public class BlogRepository : IBlogRepository
             nameof(Post.PostedDate), "DESC",
             cancellationToken);
     }
+
+    //Lấy danh sách tác giả
+    public async Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Author>()
+            .OrderBy(a => a.FullName)
+            .Select(a => new AuthorItem()
+            {
+                Id = a.Id,
+                FullName = a.FullName,
+                Email = a.ToString(),
+                JoinedDate = a.JoinedDate,
+                ImageUrl = a.ImageUrl,
+                UrlSlug = a.UrlSlug,
+                Notes = a.Notes,
+                PostCount = a.Posts.Count(p => p.Published)
+            })
+            .ToListAsync(cancellationToken);
+    }
+
 }
