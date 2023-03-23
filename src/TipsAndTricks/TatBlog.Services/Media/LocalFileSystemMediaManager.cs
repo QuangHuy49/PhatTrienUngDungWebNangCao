@@ -64,7 +64,7 @@ public class LocalFileSystemMediaManager : IMediaManager
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Could not delêt file '{filePath}'.");
+            //_logger.LogError(ex, $"Could not delete file '{filePath}'.");
             return Task.FromResult(false);
         } 
         

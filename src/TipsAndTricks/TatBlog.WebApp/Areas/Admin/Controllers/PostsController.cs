@@ -13,17 +13,24 @@ namespace TatBlog.WebApp.Areas.Admin.Controllers;
 
 public class PostsController : Controller
 {
+    private readonly ILogger<PostsController> _logger;
     private readonly IBlogRepository _blogRepository;
     private readonly IMediaManager _mediaManager;
     private readonly IMapper _mapper;
+    private readonly IValidator<PostEditModel> _postValidator;
 
-    public PostsController(IBlogRepository blogRepository, 
+    public PostsController(
+        ILogger<PostsController> logger,
+        IBlogRepository blogRepository, 
         IMediaManager mediaManager,
-        IMapper mapper)
+        IMapper mapper,
+        IValidator<PostEditModel> postValidator)
     {
+        _logger = logger;
         _blogRepository = blogRepository;
         _mediaManager = mediaManager;
         _mapper = mapper;
+        _postValidator = postValidator;
     }
 
     private async Task PopulatePostFilterModeAsync(PostFilterModel model)
@@ -46,20 +53,22 @@ public class PostsController : Controller
 
     public async Task<IActionResult> Index(PostFilterModel model)
     {
+
+        _logger.LogInformation("Tạo điều kiện truy vấn");
+
         //Sử dụng Mapster để tạo đối tượng PostQuery từ đối tượng PostFilterModel model
-        /*var postQuery = new PostQuery()
-        {
-            KeyWord = model.Keyword,
-            CategoryId = model.CategoryId,
-            AuthorId = model.AuthorId,
-            Year = model.Year,
-            Month = model.Month
-        };*/
         var postQuery = _mapper.Map<PostQuery>(model);
+
+        _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
+
 
         ViewBag.PostsList = await _blogRepository
             .GetPagedPostAsync(postQuery, 1, 10);
+
+        _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
+
         await PopulatePostFilterModeAsync(model);
+
         return View(model);
     }
 
@@ -105,10 +114,10 @@ public class PostsController : Controller
 
     [HttpPost]
     public async Task<IActionResult> Edit(
-        IValidator<PostEditModel> postValidator,
+        
         PostEditModel model)
     {
-        var validationResult = await postValidator.ValidateAsync(model);
+        var validationResult = await _postValidator.ValidateAsync(model);
 
         if (!validationResult.IsValid)
         {
@@ -157,7 +166,7 @@ public class PostsController : Controller
             //Nếu lưu thành công. xóa tập tin hình ảnh cũ (nếu có)
             if (!string.IsNullOrWhiteSpace(newImagePath))
             {
-                await _mediaManager.DeleteFileAsync(post.ImageUrl);
+                //await _mediaManager.DeleteFileAsync(post.ImageUrl);
                 post.ImageUrl = newImagePath;
             }
         }    

@@ -376,7 +376,7 @@ public class BlogRepository : IBlogRepository
             .Include(x => x.Author)
             .Include(x => x.Category)
             .Include(x => x.Tags)
-            .Where(p => p.AuthorID == postQuery.AuthorId
+            .Where(p => p.AuthorId == postQuery.AuthorId
             || p.CategoryId == postQuery.CategoryId
             || p.Category.UrlSlug.Equals(postQuery.CategorySlug)
             || p.PostedDate.Month == postQuery.Month
@@ -413,7 +413,7 @@ public class BlogRepository : IBlogRepository
 
 		if (condition.AuthorId > 0)
 		{
-			posts = posts.Where(x => x.AuthorID == condition.AuthorId);
+			posts = posts.Where(x => x.AuthorId == condition.AuthorId);
 		}
 
 		if (!string.IsNullOrWhiteSpace(condition.AuthorSlug))
