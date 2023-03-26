@@ -62,6 +62,7 @@ public interface IBlogRepository
     Task<Post> CreateOrUpdatePostAsync(
         Post post, IEnumerable<string> tags,
         CancellationToken cancellationToken = default);
+    Task DeletePost(int id, CancellationToken cancellation = default);
     //Chuyển đổi trạng thái Published của bài viết
     Task ChangeStatusPost(int id, CancellationToken cancellation = default);
     //Lấy ngẫu nhiên N bài viết. N là tham số đầu vào

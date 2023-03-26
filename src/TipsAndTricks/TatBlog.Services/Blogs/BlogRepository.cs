@@ -314,13 +314,24 @@ public class BlogRepository : IBlogRepository
             .FirstOrDefaultAsync(x => x.Id == id, cancellation);
     }
     //Thêm hay cập nhật một bài viết
-    
+
+    //Xóa một bải viết theo id
+    public async Task DeletePost(int id, CancellationToken cancellation = default)
+    {
+        var postDelete = _context.Set<Post>().SingleOrDefault(x => x.Id == id);
+        _context.Posts.Remove(postDelete);
+        await _context.SaveChangesAsync();
+    }
+
     //Chuyển đổi trạng thái Published của bài viết
     public async Task ChangeStatusPost(int id, CancellationToken cancellation = default)
     {
-        var post = _context.Set<Post>().Include(x => x.Category)
-            .Include(x => x.Author).FirstOrDefault(x => x.Id == id);
-        if (post != null)
+        var post = await _context.Set<Post>().FindAsync(id);
+        post.Published = !post.Published;
+        await _context.SaveChangesAsync(cancellation);
+            
+
+        /*if (post != null)
         {
             Console.WriteLine("ID           : {0}", post.Id);
             Console.WriteLine("Title        : {0}", post.Title);
@@ -353,7 +364,7 @@ public class BlogRepository : IBlogRepository
         else
         {
             Console.WriteLine("Khong tim thay bai viet!");
-        }
+        }*/
 
     }
 
@@ -483,5 +494,4 @@ public class BlogRepository : IBlogRepository
             })
             .ToListAsync(cancellationToken);
     }
-
 }
