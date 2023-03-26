@@ -18,6 +18,7 @@ public class PostQuery
     public int Year { get; set; }
     public bool PublishedOnly { get; set; }
     public bool NotPublished { get; set; }
+    public bool Published { get; set; }
     public string Tag { get; set; }
     public string KeyWord { get; set; }
 }

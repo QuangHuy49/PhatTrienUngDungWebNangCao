@@ -1,7 +1,54 @@
-﻿@{
-    ViewData["PageTitle"] = "Chủ đề";
+﻿@model TatBlog.WebApp.Areas.Admin.Models.CategoryFilterModel
+
+@{
+    ViewData["PageTitle"] = "Danh sách chủ đề";
+
+    var cateList = ViewBag.CategoriesList as IPagedList<Category>;
 }
 
 <h1>
     Danh sách chủ đề
 </h1>
+
+@if (cateList != null && cateList.Count > 0)
+{
+    <table class="table table-reponsive table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên chủ đề</th>
+                <th>Mô tả</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var cate in cateList)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="Admin"
+                            asp-controller="Posts"
+                            asp-action="Edit"
+                            asp-route-id="@cate.Id"
+                            class="text-bold">
+                            @cate.Id
+                        </a>
+
+                        <p class="text-muted">
+                            @cate.Id
+                        </p>
+                    </td>
+
+                    <td>@cate.Name</td>
+                    <td>@cate.Description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1 class="text-danger">
+        Không tìm thấy chủ đề nào
+    </h1>
+}

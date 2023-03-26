@@ -49,7 +49,16 @@
     </div>
 
     <div class="col-auto">
+        <label class="visually-hidden" asp-for="NotPublished">Chưa xuất bản</label>
+        <input type="checkbox" 
+               asp-for="NotPublished"/>
+            Chưa xuất bản
+    </div>
+
+    <div class="col-auto">
         <button type="submit" class="btn btn-primary">Tìm/Lọc</button>
+        <a asp-area="Admin"
+           asp-controller="Posts" onclick="resetFilter()" class="btn btn-default">Bỏ lọc</a>
         <a asp-area="Admin"
            asp-controller="Posts"
            asp-action="Edit"
@@ -58,3 +67,15 @@
        </a>
     </div>
 </form>
+
+@section Scripts {
+    <script>
+        function resetFilter() {
+            // Reset giá trị của các ô input và select
+                $('input[type="text"], select').val('');
+                $('select').prop('selectedIndex', 0);
+                // Tải lại trang để xóa các điều kiện tìm kiếm
+                location.reload();
+        }
+    </script>
+}

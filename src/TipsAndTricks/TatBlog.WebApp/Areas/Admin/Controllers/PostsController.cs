@@ -3,11 +3,13 @@ using FluentValidation.AspNetCore;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TatBlog.Core.Contracts;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Services.Blogs;
 using TatBlog.Services.Media;
 using TatBlog.WebApp.Areas.Admin.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TatBlog.WebApp.Areas.Admin.Controllers;
 
@@ -33,6 +35,27 @@ public class PostsController : Controller
         _postValidator = postValidator;
     }
 
+    public async Task<IActionResult> Index(PostFilterModel model, int pageNumber = 1, int pageSize = 10)
+    {
+
+        _logger.LogInformation("Tạo điều kiện truy vấn");
+
+        //Sử dụng Mapster để tạo đối tượng PostQuery từ đối tượng PostFilterModel model
+        var postQuery = _mapper.Map<PostQuery>(model);
+
+        _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
+
+
+        ViewBag.PostsList = await _blogRepository
+            .GetPagedPostAsync(postQuery, pageNumber, pageSize);
+
+        _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
+
+        await PopulatePostFilterModeAsync(model);
+
+        return View(model);
+    }
+
     private async Task PopulatePostFilterModeAsync(PostFilterModel model)
     {
         var authors = await _blogRepository.GetAuthorsAsync();
@@ -49,27 +72,6 @@ public class PostsController : Controller
             Text = c.Name,
             Value = c.Id.ToString()
         });
-    }
-
-    public async Task<IActionResult> Index(PostFilterModel model)
-    {
-
-        _logger.LogInformation("Tạo điều kiện truy vấn");
-
-        //Sử dụng Mapster để tạo đối tượng PostQuery từ đối tượng PostFilterModel model
-        var postQuery = _mapper.Map<PostQuery>(model);
-
-        _logger.LogInformation("Lấy danh sách bài viết từ CSDL");
-
-
-        ViewBag.PostsList = await _blogRepository
-            .GetPagedPostAsync(postQuery, 1, 10);
-
-        _logger.LogInformation("Chuẩn bị dữ liệu cho ViewModel");
-
-        await PopulatePostFilterModeAsync(model);
-
-        return View(model);
     }
 
     //Phương thức xử lý yêu cầu thêm mới hoặc cập nhật bài viết
@@ -185,5 +187,18 @@ public class PostsController : Controller
         return slugExisted
             ? Json($"Slug '{urlSlug}' đã được sử dụng")
             : Json(true);
+    }
+
+    public async Task<IActionResult> ChangePublishedPost(int id)
+    {
+        await _blogRepository.ChangeStatusPost(id);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    public async Task<IActionResult> DeletePosts(int id)
+    {
+        await _blogRepository.DeletePost(id);
+        return RedirectToAction(nameof(Index));
     }
 }
