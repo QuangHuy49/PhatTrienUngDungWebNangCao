@@ -58,6 +58,9 @@ public interface IBlogRepository
     //Tìm một bài viết theo mã số
     Task<Post> GetPostByIdAsync(int id, bool includeDetails = false,
         CancellationToken cancellation = default);
+    //Tìm bải viết theo điều kiện truy vấn
+    Task<IPagedList<Post>> GetPostByQueryAsync(PostQuery query, int pageNumber = 1,
+        int pageSize = 10, CancellationToken cancellation = default);
     //Thêm hay cập nhật một bài viết
     Task<Post> CreateOrUpdatePostAsync(
         Post post, IEnumerable<string> tags,

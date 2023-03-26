@@ -313,6 +313,13 @@ public class BlogRepository : IBlogRepository
             .Include(x => x.Tags)
             .FirstOrDefaultAsync(x => x.Id == id, cancellation);
     }
+
+    //Tìm bải viết theo điều kiện truy vấn
+    public async Task<IPagedList<Post>> GetPostByQueryAsync(PostQuery query, int pageNumber = 1, 
+        int pageSize = 10, CancellationToken cancellation = default)
+    {
+        return await FilterPosts(query).ToPagedListAsync(pageNumber, pageSize);
+    } 
     //Thêm hay cập nhật một bài viết
 
     //Xóa một bải viết theo id

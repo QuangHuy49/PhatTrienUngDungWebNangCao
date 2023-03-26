@@ -23,7 +23,11 @@
                             Tác giả: 
                         </small>
                         <span class="text-primary">
-                            @Model.Author.FullName
+                            <a asp-controller="Blog"
+                                asp-action="Author"
+                                asp-route-slug= "@Model.Author.UrlSlug">
+                                @Model.Author.FullName
+                            </a>
                         </span>
                         <small class="text-muted">
                             Chủ đề: 
