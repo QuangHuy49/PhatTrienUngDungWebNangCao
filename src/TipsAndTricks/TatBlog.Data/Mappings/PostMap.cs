@@ -49,7 +49,7 @@ public class PostMap : IEntityTypeConfiguration<Post>
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasOne(p=>p.Author)
             .WithMany(a=>a.Posts)
-            .HasForeignKey(p=>p.AuthorID)
+            .HasForeignKey(p=>p.AuthorId)
             .HasConstraintName("FK_Posts_Authors")
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasMany(p => p.Tags)

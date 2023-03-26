@@ -12,46 +12,9 @@
             Những bài viết chứa từ khóa '@postQuery.KeyWord'
         </h3>
     }
-    @*@if(!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
-    {
-        <h3 class="text-primary mb-3">
-            Những bài viết chứa danh mục '@postQuery.CategorySlug'</h3>
-    }*@
-
-    @*hiển thị danh sách bài viết thuộc chủ đề*@
-    @*@if (!string.IsNullOrWhiteSpace(postQuery.CategorySlug))
-    {
-        <h1 class="text-primary mb-3">
-    Danh sách bài viết thuộc chủ đề @ViewBag.Category.slug
-    </h1>
-    <p>Tổng số bài viết: @ViewBag.TotalItems</p>
-        <ul>
-            @foreach (var post in Model)
-            {
-                <li>
-                    <h3>@post.Title</h3>
-                    <p>@post.UrlSlug</p>
-                    <a href="@Url.Action("Post", "Blog", new { slug = post.UrlSlug })">Đọc tiếp</a>
-                </li>
-            }
-        </ul>
-        <div>
-            Trang @(ViewBag.PageNumber) / @(ViewBag.TotalPages)
-            @if (ViewBag.PageNumber > 1)
-            {
-                <a href="@Url.Action("Category", "Blog", new { slug = ViewBag.Category.Slug, pageNumber = ViewBag.PageNumber - 1 })">Trang trước</a>
-            }
-            @if (ViewBag.PageNumber < ViewBag.TotalPages)
-            {
-                <a href="@Url.Action("Category", "Blog", new { slug = ViewBag.Category.Slug, pageNumber = ViewBag.PageNumber + 1 })">Trang kế tiếp</a>
-            }
-        </div>
-    }*@
-
     @foreach (var postItem in Model)
     {
         <partial name="_PostItem" model="postItem" />
     }
     <partial name="_Pager" model="@Model"/>
 </div>
-

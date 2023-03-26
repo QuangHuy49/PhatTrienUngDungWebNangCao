@@ -16,16 +16,7 @@
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a asp-controller="Blog"
-                           asp-action="Post"
-                           asp-route-year="@Model.PostedDate.Year"
-                           asp-route-month="@Model.PostedDate.Month"
-                           asp-route-day="@Model.PostedDate.Day"
-                           asp-route-slug="@Model.UrlSlug"
-                           class="text-decoration-none text-dark"
-                           title="@Model.Title">
-                            @Model.Title
-                        </a>
+                        @Model.Title
                     </h5>
                     <p class="card-text">
                         <small class="text-muted">
@@ -33,24 +24,16 @@
                         </small>
                         <span class="text-primary">
                             <a asp-controller="Blog"
-                               asp-action="Author"
-                               asp-route-slug="@Model.Author.UrlSlug"
-                               class="text-decoration-none"
-                               title="@Model.Author.FullName">
+                                asp-action="Author"
+                                asp-route-slug= "@Model.Author.UrlSlug">
                                 @Model.Author.FullName
-                           </a>
+                            </a>
                         </span>
                         <small class="text-muted">
                             Chủ đề: 
                         </small>
                         <span class="text-primary">
-                            <a asp-controller="Blog"
-                               asp-action="Author"
-                               asp-route-slug="@Model.Category.UrlSlug"
-                               class="text-decoration-none"
-                               title="@Model.Category.Name">
-                                @Model.Category.Name
-                           </a>
+                            @Model.Category.Name
                         </span>
                     </p>
                     <p class="card-text">

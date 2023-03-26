@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TatBlog.Core.DTO;
+using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
 using TatBlog.Services.Blogs;
 
@@ -10,7 +12,7 @@ namespace TatBlog.WebApp.Controllers
         public async Task<IActionResult> Index(
             [FromQuery(Name = "k")] string keyword = null,
             [FromQuery(Name = "p")] int pageNumber = 1,
-            [FromQuery(Name = "ps")] int pageSize = 2)
+            [FromQuery(Name = "ps")] int pageSize = 10)
         {
             //Tạo đối tướng chứa các điều kiện truy vấn
             var postQuery = new PostQuery()
@@ -19,46 +21,42 @@ namespace TatBlog.WebApp.Controllers
                 PublishedOnly = true,
 
                 //Tìm bài viết theo từ khóa
-                KeyWord = keyword,
+                KeyWord = keyword
             };
 
             //Truy vấn các bài viết theo điều kiện đã tạo
             var postsList = await _blogRepository
                 .GetPagedPostAsync(postQuery, pageNumber, pageSize);
             //Lưu lại điều kiện truy vẫn để hiển thị trong view
-            ViewBag.PostQuery = postQuery;    
+            ViewBag.PostQuery = postQuery;
             //Truyền danh sach bài viết vào view để render ra HTML
             return View(postsList);
         }
-        /*public async Task<IActionResult> Category(string slug, int pageNumber = 1, int pageSize = 10)
+
+        public async Task<IActionResult> Category(string slug)
         {
-            var postQuery = new PostQuery()
+            var postQuey = new PostQuery
             {
                 CategorySlug = slug
             };
-            //Lấy danh sách bài viết thuộc chủ đề có slug tương ứng
-            var postsList = await _blogRepository.GetPostsByCategorySlugAsync(slug, pageNumber, pageSize);
 
-            //Nếu không có bài viết thuộc chủ đề này, trả về trang 404
-            if (postsList == null || !postsList.Any())
+            var post = await _blogRepository.GetPostByQueryAsync(postQuey);
+
+            return View(post);
+        }
+
+        public async Task<IActionResult> Author(string slug)
+        {
+            var postQuery = new PostQuery
             {
-                return NotFound();
-            }
+                AuthorSlug = slug
+            };
 
-            //Lấy thông tin chuyên mục
-            var category = await _blogRepository.GetCategoryBySlugAsync(slug);
+            var post = await _blogRepository.GetPostByQueryAsync(postQuery);
 
-            //Truyền thông tin chuyên mục vào ViewBag để sử dụng trong view
-            ViewBag.Category = category;
+            return View(post);
+        }
 
-            //Truyền các thông tin phân trang vào ViewBag để sử dụng trong view
-            ViewBag.PageNumber = pageNumber;
-            ViewBag.PageSize = pageSize;
-            ViewBag.TotalItems = postsList.TotalItemCount;
-            ViewBag.TotalPages = postsList.PagedCount;
-
-            return View(postsList);
-        }*/
         public IActionResult About() => View();
         public IActionResult Contact() => View();
         public IActionResult Rss() => Content("Nội dung sẽ được cập nhật");

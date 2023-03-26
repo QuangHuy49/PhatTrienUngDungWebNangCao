@@ -29,7 +29,7 @@ public interface IBlogRepository
     Task<IPagedList<TagItem>> GetPagedTagsAsync(
         IPagingParams pagingParams, CancellationToken cancellationToken = default);
     //Tìm một thẻ (Tag) theo tên định danh (slug)
-    Task<Tag> GetOneTag(string slug, CancellationToken cancellationToken = default);
+    Task<Tag> GetTagAsync(string slug, CancellationToken cancellationToken = default);
     //Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
     //quả trả về kiểu IList<TagItem>
     Task<IList<TagItem>> GetAllTag(CancellationToken cancellation = default);
@@ -40,8 +40,8 @@ public interface IBlogRepository
     //Tìm một chuyên mục theo mã số cho trước
     Task<CategoryItem> FindCategoryById(int id, CancellationToken cancellationToken = default);
     //Thêm hoặc cập nhật một chuyên mục/chủ đề
-    Task AddCategory(string name, string urlSlug, string description,
-        CancellationToken cancellation = default);
+    /*Task AddCategory(string name, string urlSlug, string description,
+        CancellationToken cancellation = default);*/
     //Xóa một chuyên mục theo mã số cho trước
     Task DeleteCategory(int id, CancellationToken cancellation = default);
     //Kiểm tra tên định danh (slug) của một chuyên mục đã tồn tại hay chưa
@@ -58,10 +58,14 @@ public interface IBlogRepository
     //Tìm một bài viết theo mã số
     Task<Post> GetPostByIdAsync(int id, bool includeDetails = false,
         CancellationToken cancellation = default);
+    //Tìm bải viết theo điều kiện truy vấn
+    Task<IPagedList<Post>> GetPostByQueryAsync(PostQuery query, int pageNumber = 1,
+        int pageSize = 10, CancellationToken cancellation = default);
     //Thêm hay cập nhật một bài viết
-    /*Task<Post> CreatOrUpdatePostAsync(Post post, 
-        IEnumerable<string> tags,
-        CancellationToken cancellationToken = default);*/
+    Task<Post> CreateOrUpdatePostAsync(
+        Post post, IEnumerable<string> tags,
+        CancellationToken cancellationToken = default);
+    Task DeletePost(int id, CancellationToken cancellation = default);
     //Chuyển đổi trạng thái Published của bài viết
     Task ChangeStatusPost(int id, CancellationToken cancellation = default);
     //Lấy ngẫu nhiên N bài viết. N là tham số đầu vào
@@ -82,10 +86,6 @@ public interface IBlogRepository
         int pageSize = 10,
         CancellationToken cancellationToken = default);
 
-    //Lấy danh sách bài viết thuộc chủ đề có slug tương ứng
-    Task<IPagedList<Post>> GetPostsByCategorySlugAsync(string categorySlug,
-        int pageNumber, int pageSize);
-
-    //Lấy thông tin chuyên mục
-    Task<Category> GetCategoryBySlugAsync(string categorySlug);
+    //Lấy danh sách tác giả
+    Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);
 }
