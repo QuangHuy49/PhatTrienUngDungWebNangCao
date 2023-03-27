@@ -59,6 +59,15 @@ public class BlogRepository : IBlogRepository
             .Take(numPosts)
             .ToListAsync(cancellationToken);
     }
+    //Lấy ngẫu nhiên n bài viết 
+    public async Task<IList<Post>> GetRandomPostAsync(int numPosts,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Post>()
+            .OrderBy(x => Guid.NewGuid())
+            .Take(numPosts)
+            .ToListAsync(cancellationToken);
+    }
     //Kiểm tra tên định danh của bài viết đã có hay chưa
     public async Task<bool> IsPostSlugExistedAsync(int postId, string slug,
         CancellationToken cancellationToken = default)
@@ -525,6 +534,16 @@ public class BlogRepository : IBlogRepository
             .ToListAsync(cancellationToken);
     }
 
+    //Lấy top 4 tác giả có nhiều bài viết nhất
+    public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Author>()
+        .Include(x => x.Posts)
+        .Take(numAuthors)
+        .ToListAsync(cancellationToken);
+    }
+
 
     public async Task<Post> GetPostBySlugAsync(
         string slug, bool published = false,
@@ -540,5 +559,30 @@ public class BlogRepository : IBlogRepository
             .Include(x => x.Author)
             .Include(x => x.Tags)
             .FirstOrDefaultAsync(x => x.UrlSlug == slug, cancellationToken);
+    }
+
+    public async Task<Dictionary<short, int>> GetMonthlyPostCountsAsync(DateTime startDate, DateTime endDate)
+    {
+        var posts = await _context.Posts
+            .Where(p => p.PostedDate >= startDate && p.PostedDate <= endDate)
+            .ToListAsync();
+
+        var monthlyCounts = new Dictionary<short, int>();
+
+        foreach (var post in posts)
+        {
+            var month = (short)post.PostedDate.Month;
+
+            if (monthlyCounts.TryGetValue(month, out var count))
+            {
+                monthlyCounts[month] = count + 1;
+            }
+            else
+            {
+                monthlyCounts[month] = 1;
+            }
+        }
+
+        return monthlyCounts;
     }
 }

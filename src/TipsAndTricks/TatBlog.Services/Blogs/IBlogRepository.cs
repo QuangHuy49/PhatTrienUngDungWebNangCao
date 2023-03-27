@@ -18,6 +18,9 @@ public interface IBlogRepository
     //Tìm top N bài viết được nhiều người xem nhất
     Task<IList<Post>> GetPopularArticlesAsync(int numPosts,
         CancellationToken cancellationToken = default);
+    //Lấy ngẫu nhiên n bài viết 
+    Task<IList<Post>> GetRandomPostAsync(int numPosts,
+        CancellationToken cancellationToken = default);
     //Kiểm tra tên định danh của bài viết đã có hay chưa
     Task<bool> IsPostSlugExistedAsync(int postId, string slug,
         CancellationToken cancellationToken = default);
@@ -90,6 +93,9 @@ public interface IBlogRepository
     //Lấy danh sách tác giả
     Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);
 
+    //Lấy top 4 tác giả có nhiều bài viết nhất
+    Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
+        CancellationToken cancellationToken = default);
 
     /////////////////////////////////////////////////////////////////////////////////////////
     Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default);
@@ -97,4 +103,6 @@ public interface IBlogRepository
     Task<Post> GetPostBySlugAsync(
       string slug, bool published = false,
       CancellationToken cancellationToken = default);
+
+    Task<Dictionary<short, int>> GetMonthlyPostCountsAsync(DateTime startDate, DateTime endDate);
 }
