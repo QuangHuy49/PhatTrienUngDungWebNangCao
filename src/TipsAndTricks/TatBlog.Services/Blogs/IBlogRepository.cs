@@ -93,16 +93,4 @@ public interface IBlogRepository
     //Lấy danh sách tác giả
     Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);
 
-    //Lấy top 4 tác giả có nhiều bài viết nhất
-    Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
-        CancellationToken cancellationToken = default);
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default);
-
-    Task<Post> GetPostBySlugAsync(
-      string slug, bool published = false,
-      CancellationToken cancellationToken = default);
-
-    Task<Dictionary<short, int>> GetMonthlyPostCountsAsync(DateTime startDate, DateTime endDate);
 }

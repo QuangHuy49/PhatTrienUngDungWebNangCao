@@ -1,0 +1,92 @@
+﻿@model TatBlog.WebApp.Areas.Admin.Models.PostFilterModel
+
+@{
+    ViewData["PageTitle"] = "Danh sách bài viết";
+
+    var postsList = ViewBag.PostsList as IPagedList<Post>;
+}
+
+<h1>
+    Danh sách bài viết
+</h1>
+
+<!-- Hiển thị form để tìm bài viết-->
+<partial name="_PostFilterPane" model="Model" />
+
+@if (postsList != null && postsList.Count >= 1)
+{
+    <table class="table table-reponsive table-striped">
+        <thead>
+            <tr>
+                <th>Tiêu đề</th>
+                <th>Tác giả</th>
+                <th>Chủ đề</th>
+                <th>Xuất bản</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var post in postsList)
+            {
+                <tr>
+                    <td>
+                        <a asp-area="Admin"
+                            asp-controller="Posts"
+                            asp-action="Edit"
+                            asp-route-id="@post.Id"
+                            class="text-bold">
+                            @post.Title
+                        </a>
+
+                        <p class="text-muted">
+                            @post.ShortDescription
+                        </p>
+                    </td>
+
+                    <td>@post.Author.FullName</td>
+                    <td>@post.Category.Name</td>
+                    <td>
+                        <a asp-area="Admin"
+                            asp-controller="Posts"
+                            asp-action="ChangePublishedPost"
+                            asp-route-id="@post.Id"
+                            class="btn btn-info">
+                            @(post.Published ? "Có" : "Không")
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                            asp-controller="Posts"
+                            class="btn btn-danger"
+                            onclick="deletePost(@post.Id)">
+                            Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1 class="text-danger">
+        Không tìm thấy bài viết nào!!!
+    </h1>
+}
+
+<partial name="_Pager" model="postsList" />
+
+@section Scripts {
+    <script>
+        function deletePost(postId) {
+            if (confirm('Bạn có thực sự muốn xóa bài viết này không?')) {
+                // Gọi AJAX đến phương thức hành động phía máy chủ để xóa bài viết
+                $.post('@Url.Action("DeletePosts")', { id: postId }, function () {
+                    // Tải lại trang sau khi đã thành công
+                    location.reload();
+                });
+            }
+        }
+    </script>
+}

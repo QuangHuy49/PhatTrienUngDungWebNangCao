@@ -237,57 +237,6 @@ public class BlogRepository : IBlogRepository
     {
         var array = text.Trim().ToLower().Split(' ');
         return string.Join("-", array);
-    }
-
-    public async Task<Post> CreateOrUpdatePostAsync(
-        Post post, IEnumerable<string> tags,
-        CancellationToken cancellationToken = default)
-    {
-        if (post.Id > 0)
-        {
-            await _context.Entry(post).Collection(x => x.Tags).LoadAsync(cancellationToken);
-        }
-        else
-        {
-            post.Tags = new List<Tag>();
-        }
-
-        var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => new
-            {
-                Name = x,
-                Slug = GenerateSlug(x)
-            })
-            .GroupBy(x => x.Slug)
-            .ToDictionary(g => g.Key, g => g.First().Name);
-
-
-        foreach (var kv in validTags)
-        {
-            if (post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0)) continue;
-
-            var tag = await GetTagAsync(kv.Key, cancellationToken) ?? new Tag()
-            {
-                Name = kv.Value,
-                Description = kv.Value,
-                UrlSlug = kv.Key
-            };
-
-            post.Tags.Add(tag);
-        }
-
-        post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
-
-        if (post.Id > 0)
-            _context.Update(post);
-        else
-            _context.Add(post);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return post;
-    }
-
     //Xóa một chuyên mục theo mã số cho trước
     public async Task DeleteCategory(int id, CancellationToken cancellation = default)
     {
@@ -532,57 +481,5 @@ public class BlogRepository : IBlogRepository
                 PostCount = a.Posts.Count(p => p.Published)
             })
             .ToListAsync(cancellationToken);
-    }
-
-    //Lấy top 4 tác giả có nhiều bài viết nhất
-    public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
-        CancellationToken cancellationToken = default)
-    {
-        return await _context.Set<Author>()
-        .Include(x => x.Posts)
-        .Take(numAuthors)
-        .ToListAsync(cancellationToken);
-    }
-
-
-    public async Task<Post> GetPostBySlugAsync(
-        string slug, bool published = false,
-        CancellationToken cancellationToken = default)
-    {
-        if (!published)
-        {
-            return await _context.Set<Post>().FindAsync(slug);
-        }
-
-        return await _context.Set<Post>()
-            .Include(x => x.Category)
-            .Include(x => x.Author)
-            .Include(x => x.Tags)
-            .FirstOrDefaultAsync(x => x.UrlSlug == slug, cancellationToken);
-    }
-
-    public async Task<Dictionary<short, int>> GetMonthlyPostCountsAsync(DateTime startDate, DateTime endDate)
-    {
-        var posts = await _context.Posts
-            .Where(p => p.PostedDate >= startDate && p.PostedDate <= endDate)
-            .ToListAsync();
-
-        var monthlyCounts = new Dictionary<short, int>();
-
-        foreach (var post in posts)
-        {
-            var month = (short)post.PostedDate.Month;
-
-            if (monthlyCounts.TryGetValue(month, out var count))
-            {
-                monthlyCounts[month] = count + 1;
-            }
-            else
-            {
-                monthlyCounts[month] = 1;
-            }
-        }
-
-        return monthlyCounts;
     }
 }

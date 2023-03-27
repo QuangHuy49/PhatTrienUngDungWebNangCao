@@ -15,8 +15,6 @@ public class TagsWidget : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         //Lấy danh sách các thẻ
-        var tags = await _blogRepository.GetTagsAsync();
-
         return View(tags);
     }
 }
