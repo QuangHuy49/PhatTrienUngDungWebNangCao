@@ -23,12 +23,13 @@ public class BlogRepository : IBlogRepository
         _context = context;
     }
     //Tìm bài viết có tên định danh là 'slug' và được đăng vào month và year
-    public async Task<Post> GetPostAsync(int year, int month, string slug,
+    public async Task<Post> GetPostAsync(int year, int month, int day, string slug,
         CancellationToken cancellationToken = default)
     {
         IQueryable<Post> postsQuery = _context.Set<Post>()
             .Include(x => x.Category)
-            .Include(x => x.Author);
+            .Include(x => x.Author)
+            .Include(x => x.Tags);
         if (year > 0)
         {
             postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
@@ -37,6 +38,10 @@ public class BlogRepository : IBlogRepository
         {
             postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
         }
+        if (day > 0)
+        {
+            postsQuery = postsQuery.Where(x => x.PostedDate.Day == day);
+        }    
         if (!string.IsNullOrWhiteSpace(slug))
         {
             postsQuery = postsQuery.Where(x => x.UrlSlug == slug);
@@ -112,9 +117,27 @@ public class BlogRepository : IBlogRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Tag>()
-            .Where(x => x.UrlSlug == slug)
+            .Where(x => x.UrlSlug.Contains(slug))
             .FirstOrDefaultAsync(cancellationToken);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default)
+    {
+        IQueryable<Tag> tags = _context.Set<Tag>();
+
+        return await tags
+            .OrderBy(x => x.Name)
+            .Select(x => new TagItem()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                UrlSlug = x.UrlSlug,
+                Description = x.Description,
+                PostCount = x.Posts.Count(p => p.Published)
+            }).ToListAsync(cancellationToken);
+    }
+
     //Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
     //quả trả về kiểu IList<TagItem>
     public async Task<IList<TagItem>> GetAllTag(CancellationToken cancellation = default)
@@ -500,5 +523,22 @@ public class BlogRepository : IBlogRepository
                 PostCount = a.Posts.Count(p => p.Published)
             })
             .ToListAsync(cancellationToken);
+    }
+
+
+    public async Task<Post> GetPostBySlugAsync(
+        string slug, bool published = false,
+        CancellationToken cancellationToken = default)
+    {
+        if (!published)
+        {
+            return await _context.Set<Post>().FindAsync(slug);
+        }
+
+        return await _context.Set<Post>()
+            .Include(x => x.Category)
+            .Include(x => x.Author)
+            .Include(x => x.Tags)
+            .FirstOrDefaultAsync(x => x.UrlSlug == slug, cancellationToken);
     }
 }

@@ -16,6 +16,7 @@ public class PostQuery
     public string AuthorSlug { get; set; }
     public int Month { get; set; }
     public int Year { get; set; }
+    public int Day { get; set; }
     public bool PublishedOnly { get; set; }
     public bool NotPublished { get; set; }
     public bool Published { get; set; }

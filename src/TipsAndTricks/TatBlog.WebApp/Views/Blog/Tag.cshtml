@@ -1,0 +1,21 @@
+﻿@model IPagedList<Post>
+
+@{
+    ViewData["Title"] = "Thẻ";
+    var tag = ViewData["Tag"] as Tag;
+}
+
+<div class="p-4">
+    @if (tag != null)
+    {
+        <h2 class="text-primary mb-3">
+            Những bài viết thuộc thẻ '@tag.Name'
+        </h2>
+    }
+    @foreach (var postItem in Model)
+    {
+        <partial name="_PostItem" model="postItem" />
+    }
+
+    <partial name="_Pager" model=Model />
+</div>

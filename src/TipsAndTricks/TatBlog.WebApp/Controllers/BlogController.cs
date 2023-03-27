@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SlugGenerator;
+using System.Drawing.Printing;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Entities;
 using TatBlog.Data.Contexts;
@@ -55,6 +57,56 @@ namespace TatBlog.WebApp.Controllers
             var post = await _blogRepository.GetPostByQueryAsync(postQuery);
 
             return View(post);
+        }
+
+        public async Task<IActionResult> Tag(string slug)
+        {
+            var postQuery = new PostQuery
+            {
+                TagSlug = slug
+            };
+
+            var post = await _blogRepository.GetPostByQueryAsync(postQuery);
+            var tag = await _blogRepository.GetTagAsync(slug);
+            ViewData["Tag"] = tag;
+
+            return View(post);
+        }
+
+        //public async Task<IActionResult> Post(int year, int month, int day, string slug)
+        //{
+        //    var postQuery = new PostQuery
+        //    {
+        //        Year = year,
+        //        Month = month,
+        //        Day = day,
+        //        TitleSlug = slug,
+        //        PublishedOnly = true
+        //    };
+
+        //    var post = _blogRepository.GetPostAsync(postQuery.Year, postQuery.Month, postQuery.Day, postQuery.TitleSlug);
+        //    if (post == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (!postQuery.PublishedOnly)
+        //    {
+        //        return NotFound();
+        //    }    
+        //    else
+        //    {
+        //        //await _blogRepository.IncreaseViewCountAsync(post.Id);
+        //    }    
+        //    return View(post);
+        //}
+
+        public async Task<IActionResult> Post(int year, int month, int day, string slug)
+        {
+            var post = await _blogRepository.GetPostAsync(year, month, day, slug);
+            await _blogRepository.IncreaseViewCountAsync(post.Id);
+            return View(post);
+
         }
 
         public IActionResult About() => View();
