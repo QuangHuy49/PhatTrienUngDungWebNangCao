@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 using TatBlog.Core.Entities;
 using TatBlog.Core.DTO;
 using TatBlog.Core.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace TatBlog.Services.Blogs;
 
 public interface IBlogRepository
 {
     //Tìm bài viết có tên định danh là 'slug' và được đăng vào tháng 'month' năm 'year'
-    Task<Post> GetPostAsync(int year, int month, string slug,
+    Task<Post> GetPostAsync(int year, int month, int day, string slug,
         CancellationToken cancellationToken = default);
     //Tìm top N bài viết được nhiều người xem nhất
     Task<IList<Post>> GetPopularArticlesAsync(int numPosts,
+        CancellationToken cancellationToken = default);
+    //Lấy ngẫu nhiên n bài viết 
+    Task<IList<Post>> GetRandomPostAsync(int numPosts,
         CancellationToken cancellationToken = default);
     //Kiểm tra tên định danh của bài viết đã có hay chưa
     Task<bool> IsPostSlugExistedAsync(int postId, string slug,
@@ -88,4 +92,5 @@ public interface IBlogRepository
 
     //Lấy danh sách tác giả
     Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);
+
 }

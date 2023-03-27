@@ -23,12 +23,13 @@ public class BlogRepository : IBlogRepository
         _context = context;
     }
     //Tìm bài viết có tên định danh là 'slug' và được đăng vào month và year
-    public async Task<Post> GetPostAsync(int year, int month, string slug,
+    public async Task<Post> GetPostAsync(int year, int month, int day, string slug,
         CancellationToken cancellationToken = default)
     {
         IQueryable<Post> postsQuery = _context.Set<Post>()
             .Include(x => x.Category)
-            .Include(x => x.Author);
+            .Include(x => x.Author)
+            .Include(x => x.Tags);
         if (year > 0)
         {
             postsQuery = postsQuery.Where(x => x.PostedDate.Year == year);
@@ -37,6 +38,10 @@ public class BlogRepository : IBlogRepository
         {
             postsQuery = postsQuery.Where(x => x.PostedDate.Month == month);
         }
+        if (day > 0)
+        {
+            postsQuery = postsQuery.Where(x => x.PostedDate.Day == day);
+        }    
         if (!string.IsNullOrWhiteSpace(slug))
         {
             postsQuery = postsQuery.Where(x => x.UrlSlug == slug);
@@ -51,6 +56,15 @@ public class BlogRepository : IBlogRepository
             .Include(x => x.Author)
             .Include(x => x.Category)
             .OrderByDescending(p => p.ViewCount)
+            .Take(numPosts)
+            .ToListAsync(cancellationToken);
+    }
+    //Lấy ngẫu nhiên n bài viết 
+    public async Task<IList<Post>> GetRandomPostAsync(int numPosts,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<Post>()
+            .OrderBy(x => Guid.NewGuid())
             .Take(numPosts)
             .ToListAsync(cancellationToken);
     }
@@ -112,9 +126,27 @@ public class BlogRepository : IBlogRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Tag>()
-            .Where(x => x.UrlSlug == slug)
+            .Where(x => x.UrlSlug.Contains(slug))
             .FirstOrDefaultAsync(cancellationToken);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    public async Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default)
+    {
+        IQueryable<Tag> tags = _context.Set<Tag>();
+
+        return await tags
+            .OrderBy(x => x.Name)
+            .Select(x => new TagItem()
+            {
+                Id = x.Id,
+                Name = x.Name,
+                UrlSlug = x.UrlSlug,
+                Description = x.Description,
+                PostCount = x.Posts.Count(p => p.Published)
+            }).ToListAsync(cancellationToken);
+    }
+
     //Lấy danh sách tất cả các thẻ (Tag) kèm theo số bài viết chứa thẻ đó. Kết
     //quả trả về kiểu IList<TagItem>
     public async Task<IList<TagItem>> GetAllTag(CancellationToken cancellation = default)
@@ -205,57 +237,6 @@ public class BlogRepository : IBlogRepository
     {
         var array = text.Trim().ToLower().Split(' ');
         return string.Join("-", array);
-    }
-
-    public async Task<Post> CreateOrUpdatePostAsync(
-        Post post, IEnumerable<string> tags,
-        CancellationToken cancellationToken = default)
-    {
-        if (post.Id > 0)
-        {
-            await _context.Entry(post).Collection(x => x.Tags).LoadAsync(cancellationToken);
-        }
-        else
-        {
-            post.Tags = new List<Tag>();
-        }
-
-        var validTags = tags.Where(x => !string.IsNullOrWhiteSpace(x))
-            .Select(x => new
-            {
-                Name = x,
-                Slug = GenerateSlug(x)
-            })
-            .GroupBy(x => x.Slug)
-            .ToDictionary(g => g.Key, g => g.First().Name);
-
-
-        foreach (var kv in validTags)
-        {
-            if (post.Tags.Any(x => string.Compare(x.UrlSlug, kv.Key, StringComparison.InvariantCultureIgnoreCase) == 0)) continue;
-
-            var tag = await GetTagAsync(kv.Key, cancellationToken) ?? new Tag()
-            {
-                Name = kv.Value,
-                Description = kv.Value,
-                UrlSlug = kv.Key
-            };
-
-            post.Tags.Add(tag);
-        }
-
-        post.Tags = post.Tags.Where(t => validTags.ContainsKey(t.UrlSlug)).ToList();
-
-        if (post.Id > 0)
-            _context.Update(post);
-        else
-            _context.Add(post);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return post;
-    }
-
     //Xóa một chuyên mục theo mã số cho trước
     public async Task DeleteCategory(int id, CancellationToken cancellation = default)
     {

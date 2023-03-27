@@ -3,18 +3,18 @@ using TatBlog.Services.Blogs;
 
 namespace TatBlog.WebApp.Components;
 
-public class TagsWidget : ViewComponent
+public class RandomPosts : ViewComponent
 {
     private readonly IBlogRepository _blogRepository;
-    
-    public TagsWidget(IBlogRepository blogRepository)
+    public RandomPosts(IBlogRepository blogRepository)
     {
         _blogRepository = blogRepository;
-    }    
+    }
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        //Lấy danh sách các thẻ
-        return View(tags);
+        //Lấy danh sách top 5 bài viết ngẫu nhiên
+        var categories = await _blogRepository.GetRandomPostAsync(5);
+        return View(categories);
     }
 }

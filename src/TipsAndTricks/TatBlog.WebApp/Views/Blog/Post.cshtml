@@ -1,0 +1,47 @@
+﻿@model Post
+
+@{
+    ViewData["Title"] = "Chi tiết bài viết";
+  
+}
+
+<div class="p-4">
+    <h2>Chi tiết bài viết @Model.Title</h2>
+    <p>Ngày đăng bải: @Model.PostedDate.Day/@Model.PostedDate.Month/@Model.PostedDate.Year</p>
+    <div class="card-body">
+        <p class="card-text">
+            <small class="text-muted">
+                Tác giả:
+            </small>
+            <span class="text-primary">
+                <a asp-controller="Blog"
+                   asp-action="Author"
+                   asp-route-slug="@Model.Author.UrlSlug"
+                   class="text-decoration-none">
+                    @Model.Author.FullName
+                </a>
+            </span>
+            <small class="text-muted">
+                Chủ đề:
+            </small>
+            <span class="text-primary">
+                <a asp-controller="Blog"
+                   asp-action="Category"
+                   asp-route-slug="@Model.Category.UrlSlug"
+                   class="text-decoration-none">
+                    @Model.Category.Name
+               </a>
+            </span>
+        </p>
+        <p class="card-text">
+            @Html.Raw(Model.ShortDescription)
+        </p>
+        <div class="tag-list">
+            <partial name="_TagList" model="@Model.Tags" />
+        </div>
+        <p class="card-text">
+            @Html.Raw(Model.Description)
+        </p>
+    </div>
+    <h6>Lượt xem bài viết: <a class="text-primary text-decoration-none">@Model.ViewCount</a></h6>
+</div>

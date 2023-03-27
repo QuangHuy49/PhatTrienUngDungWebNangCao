@@ -3,18 +3,17 @@ using TatBlog.Services.Blogs;
 
 namespace TatBlog.WebApp.Components;
 
-public class TagsWidget : ViewComponent
+public class BestAuthors : ViewComponent
 {
     private readonly IBlogRepository _blogRepository;
-    
-    public TagsWidget(IBlogRepository blogRepository)
+    public BestAuthors(IBlogRepository blogRepository)
     {
         _blogRepository = blogRepository;
-    }    
-
+    }
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        //Lấy danh sách các thẻ
-        return View(tags);
+        //Lấy danh sách tác giả
+        var categories = await _blogRepository.GetAuthorManyPostAsync(4);
+        return View(categories);
     }
 }
