@@ -515,8 +515,19 @@ public class BlogRepository : IBlogRepository
             cancellationToken);
     }
 
+    public async Task<IPagedList<T>> GetPagedPostsAsync<T>(
+        PostQuery condition,
+        IPagingParams pagingParams,
+        Func<IQueryable<Post>, IQueryable<T>> mapper)
+    {
+        var posts = FilterPosts(condition);
+        var projectedPosts = mapper(posts);
+
+        return await projectedPosts.ToPagedListAsync(pagingParams);
+    }
+
     //Lấy danh sách tác giả
-    public async Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default)
+    /*public async Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default)
     {
         return await _context.Set<Author>()
             .OrderBy(a => a.FullName)
@@ -532,17 +543,17 @@ public class BlogRepository : IBlogRepository
                 PostCount = a.Posts.Count(p => p.Published)
             })
             .ToListAsync(cancellationToken);
-    }
+    }*/
 
     //Lấy top 4 tác giả có nhiều bài viết nhất
-    public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
+    /*public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Author>()
         .Include(x => x.Posts)
         .Take(numAuthors)
         .ToListAsync(cancellationToken);
-    }
+    }*/
 
 
     public async Task<Post> GetPostBySlugAsync(

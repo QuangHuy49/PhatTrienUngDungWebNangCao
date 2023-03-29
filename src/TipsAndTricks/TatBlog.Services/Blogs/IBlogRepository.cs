@@ -90,12 +90,17 @@ public interface IBlogRepository
         int pageSize = 10,
         CancellationToken cancellationToken = default);
 
+    Task<IPagedList<T>> GetPagedPostsAsync<T>(
+        PostQuery condition,
+        IPagingParams pagingParams,
+        Func<IQueryable<Post>, IQueryable<T>> mapper);
+
     //Lấy danh sách tác giả
-    Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);
+    /*Task<IList<AuthorItem>> GetAuthorsAsync(CancellationToken cancellationToken = default);*/
 
     //Lấy top 4 tác giả có nhiều bài viết nhất
-    Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
-        CancellationToken cancellationToken = default);
+    /*Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
+        CancellationToken cancellationToken = default);*/
 
     /////////////////////////////////////////////////////////////////////////////////////////
     Task<IList<TagItem>> GetTagsAsync(CancellationToken cancellationToken = default);
