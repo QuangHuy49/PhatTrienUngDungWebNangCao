@@ -17,19 +17,22 @@ public class PostsController : Controller
 {
     private readonly ILogger<PostsController> _logger;
     private readonly IBlogRepository _blogRepository;
+    private readonly IAuthorRepository _authorRepository;
     private readonly IMediaManager _mediaManager;
     private readonly IMapper _mapper;
     private readonly IValidator<PostEditModel> _postValidator;
 
     public PostsController(
         ILogger<PostsController> logger,
-        IBlogRepository blogRepository, 
+        IBlogRepository blogRepository,
+        IAuthorRepository authorRepository,
         IMediaManager mediaManager,
         IMapper mapper,
         IValidator<PostEditModel> postValidator)
     {
         _logger = logger;
         _blogRepository = blogRepository;
+        _authorRepository = authorRepository;
         _mediaManager = mediaManager;
         _mapper = mapper;
         _postValidator = postValidator;
@@ -58,7 +61,7 @@ public class PostsController : Controller
 
     private async Task PopulatePostFilterModeAsync(PostFilterModel model)
     {
-        var authors = await _blogRepository.GetAuthorsAsync();
+        var authors = await _authorRepository.GetAuthorsAsync();
         var categories = await _blogRepository.GetCategoryAsync();
 
         model.AuthorList = authors.Select(a => new SelectListItem()
@@ -77,7 +80,7 @@ public class PostsController : Controller
     //Phương thức xử lý yêu cầu thêm mới hoặc cập nhật bài viết
     private async Task PopulatePostEditModeAsync(PostEditModel model)
     {
-        var authors = await _blogRepository.GetAuthorsAsync();
+        var authors = await _authorRepository.GetAuthorsAsync();
         var categories = await _blogRepository.GetCategoryAsync();
 
         model.AuthorList = authors.Select(a => new SelectListItem()
