@@ -30,7 +30,7 @@ public static class AuthorEndpoints
             .Produces(404);
 
         routeGroupBuilder.MapGet(
-                "/{slug:regex(^[a-z0-9 -]+$)}/posts",
+                "/{slug:regex(^[a-z0-9_-]+$)}/posts",
                 GetPostsByAuthorSlug)
             .WithName("GetPostsByAuthorSlug")
             .Produces<PaginationResult<PostDto>>();
@@ -55,7 +55,7 @@ public static class AuthorEndpoints
             .Produces(400)
             .Produces(409);
 
-        routeGroupBuilder.MapPut("/{id:int}", DeleteAuthor)
+        routeGroupBuilder.MapDelete("/{id:int}", DeleteAuthor)
             .WithName("DeleteAuthor")
             .Produces(204)
             .Produces(404);

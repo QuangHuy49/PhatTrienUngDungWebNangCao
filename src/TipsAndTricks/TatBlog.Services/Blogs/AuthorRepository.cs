@@ -96,6 +96,10 @@ public class AuthorRepository : IAuthorRepository
             })
             .ToPagedListAsync(pagingParams, cancellationToken);
         }
+		else
+		{
+            return null;
+        }
 	}
 
 	public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
