@@ -546,14 +546,14 @@ public class BlogRepository : IBlogRepository
     }*/
 
     //Lấy top 4 tác giả có nhiều bài viết nhất
-    /*public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
+    public async Task<IList<Author>> GetAuthorManyPostAsync(int numAuthors,
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Author>()
         .Include(x => x.Posts)
         .Take(numAuthors)
         .ToListAsync(cancellationToken);
-    }*/
+    }
 
 
     public async Task<Post> GetPostBySlugAsync(

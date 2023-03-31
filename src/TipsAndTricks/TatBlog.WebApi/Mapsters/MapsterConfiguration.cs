@@ -15,6 +15,8 @@ public class MapsterConfiguration : IRegister
                 src => src.Posts == null ? 0 : src.Posts.Count);
 
         config.NewConfig<AuthorEditModel, Author>();
+        config.NewConfig<CategoryEditModel, Category>();
+
         config.NewConfig<Category, CategoryDto>();
         config.NewConfig<Category, CategoryItem>()
             .Map(dest => dest.PostCount,

@@ -77,13 +77,10 @@ public class AuthorRepository : IAuthorRepository
 		string name = null,
 		CancellationToken cancellationToken = default)
 	{
-		if (!string.IsNullOrWhiteSpace(name))
-		{
-            return await _context.Set<Author>()
+		return await _context.Set<Author>()
             .AsNoTracking()
-            /*.WhereIf(!string.IsNullOrWhiteSpace(name), 
-				x => x.FullName.Contains(name))*/
-            .Where(x => x.FullName.Contains(name))
+			.WhereIf(!string.IsNullOrWhiteSpace(name),
+				x => x.FullName.Contains(name))
             .Select(a => new AuthorItem()
             {
                 Id = a.Id,
@@ -94,13 +91,8 @@ public class AuthorRepository : IAuthorRepository
                 UrlSlug = a.UrlSlug,
                 PostCount = a.Posts.Count(p => p.Published)
             })
-            .ToPagedListAsync(pagingParams, cancellationToken);
-        }
-		else
-		{
-            return null;
-        }
-	}
+            .ToPagedListAsync(pagingParams, cancellationToken);        
+    }
 
 	public async Task<IPagedList<T>> GetPagedAuthorsAsync<T>(
 		Func<IQueryable<Author>, IQueryable<T>> mapper,
