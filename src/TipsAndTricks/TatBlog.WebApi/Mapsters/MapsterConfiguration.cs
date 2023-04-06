@@ -16,6 +16,7 @@ public class MapsterConfiguration : IRegister
 
         config.NewConfig<AuthorEditModel, Author>();
         config.NewConfig<CategoryEditModel, Category>();
+        config.NewConfig<PostEditModel, Post>();
 
         config.NewConfig<Category, CategoryDto>();
         config.NewConfig<Category, CategoryItem>()

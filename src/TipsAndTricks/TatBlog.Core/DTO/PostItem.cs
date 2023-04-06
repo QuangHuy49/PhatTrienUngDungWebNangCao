@@ -22,6 +22,7 @@ namespace TatBlog.Core.DTO
         public DateTime? ModifiedDate { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public string AuthorName { get; set; }
         public int AuthorID { get; set; }
         public Category Category { get; set; }
         public Author Author { get; set; }
