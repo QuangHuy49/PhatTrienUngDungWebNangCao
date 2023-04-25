@@ -4,7 +4,7 @@ export async function getPosts(keyword = '', pageSize = 10, pageNumber = 1,
     sortColumn = '', sortOrder = '') {
     try {
         const response = await
-            axios.get(`https://localhost:7085/api/posts?keyword=${keyword}&PageSize=${pageSize}
+            axios.get(`https://localhost:7172/api/posts?keyword=${keyword}&PageSize=${pageSize}
             &PageNumber=${pageNumber}&SortColmn=${sortColumn}&SortOrder=${sortOrder}`);
 
         const data = response.data;
