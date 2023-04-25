@@ -10,6 +10,8 @@ const PostItem = ({ postItem }) => {
 
     let postedDate = new Date(postItem.postedDate);
 
+    console.log("", postItem)
+
     return (
         <article className="blog-entry mb-4">
             <Card>
@@ -23,11 +25,11 @@ const PostItem = ({ postItem }) => {
                             <Card.Text>
                                 <small className="text-muted">Tác giả:</small>
                                 <span className="text-primary m-1">
-                                    {postItem.author.fullName}
+                                    {postItem.authorName}
                                 </span>
                                 <small className="text-muted">Chủ đề:</small>
                                 <span className="text-primary m-1">
-                                    {postItem.category.name}
+                                    {postItem.categoryName}
                                 </span>
                             </Card.Text>
                             <Card.Text>
@@ -37,7 +39,7 @@ const PostItem = ({ postItem }) => {
                                 <TagList tagList={postItem.tags} />
                             </div>
                             <div className="text-end">
-                                <Link to={`/blog/post?year=${postedDate.getFullYear()}&month=${postedDate.getMonth()}
+                                <Link to={`/blog/post?year=${postedDate.getFullYear()}&month=${postedDate.getMonth() + 1}
                                 &day=${postedDate.getDay()}&slug=${postItem.urlSlug}`}
                                     className="btn btn-primary"
                                     title={postItem.title}>

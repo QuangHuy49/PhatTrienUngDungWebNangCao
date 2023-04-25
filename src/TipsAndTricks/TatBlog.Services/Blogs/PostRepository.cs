@@ -30,6 +30,9 @@ public class PostRepository : IPostRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.Set<Post>()
+            .Include(x => x.Author)
+            .Include(x => x.Category)
+            .Include(x => x.Tags)
             .AsNoTracking()
             .WhereIf(!string.IsNullOrWhiteSpace(name),
                 x => x.Title.Contains(name))
@@ -40,7 +43,12 @@ public class PostRepository : IPostRepository
                 UrlSlug = a.UrlSlug,
                 ShortDescription = a.ShortDescription,
                 Description = a.Description,
-                ViewCount= a.ViewCount
+                ViewCount= a.ViewCount,
+                AuthorID = a.AuthorId,
+                AuthorName = a.Author.FullName,
+                CategoryId = a.CategoryId,
+                CategoryName = a.Category.Name,
+                Tags = a.Tags
             })
             .ToPagedListAsync(pagingParams, cancellationToken);
     }
